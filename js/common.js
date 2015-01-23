@@ -190,7 +190,7 @@ function getRelatedUrlByIndex( index )
     }
     else if ( S_RELATED_LINKS_ARRAY[index].toString() === S_GITHUB.toString() )
     {
-        return "https://github.com/abc9070410/OfflineTimetable";
+        return "https://github.com/abc9070410/Tuya";
     }
     else if ( S_RELATED_LINKS_ARRAY[index].toString() === S_UBUNTU_APP_DIRECTORY.toString() )
     {
