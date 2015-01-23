@@ -33,7 +33,7 @@ var PLATFORM_FIREFOXOS = 5;
 var PLATFORM_CHROMEOS = 6;
 var PLATFORM_WINDOWS_8 = 7;
 var PLATFORM_BROWSER = 8;
-var giPlatform = PLATFORM_BROWSER; // default platform
+var giPlatform = PLATFORM_WINDOWS_8; // default platform
 
 var B_ON_DEVICE = true;
 
@@ -601,8 +601,7 @@ var gsIndexPath = ""; // for IE and Windows Phone
 var gbDivWasChanged = false;
 
 var gStoredItem = {};
-
-
+var gsFontFamily = "Times New Roman";
 
 
 

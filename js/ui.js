@@ -75,8 +75,6 @@ function isListID( sDivID )
 function changeHash( sPageID )
 {
     //var eContent = document.getElementById( ID_CONTENT );
-
-    //confirm( "XX" );
     
     gbDivWasChanged = true;
     

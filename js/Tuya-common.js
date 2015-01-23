@@ -12,7 +12,7 @@ function printFinalDebug( message )
 
 function printError( message )
 {
-    errorMessage.innerHTML += "發生錯誤: " + message + "<br";
+    errorMessage.innerHTML += "ERROR: " + message + "<br";
 }
 
 function unlockPen()
@@ -43,14 +43,12 @@ function playPenHistoryAnimation( iPlayNumber, iPlayStyle, iBeginOrder, penOrder
     return function()
     {
         initQueue();
-        //printDebug( "<br> Animation: " + penOrder );
         playPenHistory( iPlayNumber, iPlayStyle, iBeginOrder, penOrder );
     }
 }
 
 function playPrepared()
 {
-    //alert( "PRE: " + getPenWidth() );
 
     lockPen(); 
     setCanvasMode( PLAY_MODE );
@@ -179,7 +177,6 @@ function playPenHistory( iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder 
     }
     else
     {
-        //printDebug( "" + iTouchOrder + 1 + "," + penMotions.length );
         var iNextOrder = getNext( iPlayStyle, iTouchOrder );
         setTimeout( playPenHistoryAnimation( iPlayNumber, iPlayStyle, iBeginTouchOrder, iNextOrder ), getPlaySpeed() * penMotions.length + 1 );
     }
@@ -575,18 +572,12 @@ function resetPenHistory2( penHistory, iNewWidth, iNewHeight, bFitFileSize )
 function resetPenHistory( penHistory, x, y, width, height )
 {
     var posData = getExtremePosData( penHistory );
-
-    printDebug( "[X:" + posData.minX + "," + posData.maxX + "]" );
-    printDebug( "[Y:" + posData.minY + "," + posData.maxY + "]" );
-
     var originalWidth = posData.maxX - posData.minX;
     var originalHeight = posData.maxY - posData.minY;
     var widthRatio = width / originalWidth;
     var heightRatio = height / originalHeight;
     var ratio;
-
-    printDebug( originalWidth + "," + originalHeight );
-
+    
     if ( widthRatio * originalHeight < height )
     {
         ratio = widthRatio;
@@ -596,8 +587,6 @@ function resetPenHistory( penHistory, x, y, width, height )
         ratio = heightRatio;
     }
 
-    printDebug( "[" + gCanvas.width + "," + gCanvas.height + "][" + ratio + "][NEW SIZE:" + originalWidth * ratio + "," + originalHeight * ratio + "]" );
-    
     //gPlaySpeed *= ratio; // 2014.10.30
     
     penHistory = resizePenHistory( penHistory, ratio );
@@ -605,10 +594,6 @@ function resetPenHistory( penHistory, x, y, width, height )
 
     var offsetX = x - ( posData.minX + posData.maxX ) / 2;
     var offsetY = y - ( posData.minY + posData.maxY ) / 2;
-
-    printDebug( "[OFFSET:" + offsetX + "-" + offsetY + "]" );
-    printDebug( "[X:" + ( posData.minX + offsetX ) + "," + ( posData.maxX + offsetX ) + "]" );
-    printDebug( "[Y:" + ( posData.minY + offsetY ) + "," + ( posData.maxY + offsetY ) + "]" );
 
     return shiftPenHistory( penHistory, offsetX, offsetY );
 }
@@ -655,7 +640,7 @@ function setPlayTimer( motionTokens, iPlayNumber, iBeginTouchOrder, iTouchOrder,
     }
     else if ( penStyle == TYPE_GLOBAL_VALUE )
     {
-        //printDebug( "c" );
+
         setTimeout( setGlobalAnimation( motionTokens[1], motionTokens[2], parseInt( motionTokens[3] ), parseInt( motionTokens[4] ), parseInt( motionTokens[5] ), parseInt( motionTokens[6] ), parseInt( motionTokens[7] ), parseInt( motionTokens[8] ), iPlayNumber, iTouchOrder, order ), speed * ( order ) );
 
         // first step : set the global setting (eg. play speed)
@@ -979,13 +964,13 @@ function getExtremePosData( penHistory )
     var minY = 10000;
     var maxY = 0;
 
-    // 找出左上角和右下角
+    // find the left-top and right-buttom
     for ( var i = 0; i < motions.length; i ++ )
     {
         var tokens = motions[i].split( TOKEN_GAP );
         var type = parseInt( tokens[0] );
 
-        // 只找畫筆的部份
+        // find drawing only
         if ( type == TYPE_PEN_LINE )
         {
             var x = parseInt( tokens[1] );

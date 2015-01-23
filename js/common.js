@@ -1664,12 +1664,7 @@ function clickPenStyleDemoDecreaseDefault()
 function clickPenStyleDemoDecrease( iPenStyle )
 {
     var iMinWidth = 3;
-    var iDecrease = 5;
-    
-    if ( iPenStyle == TYPE_TEXT )
-    {
-        iIncrease = 15;
-    }
+    var iDecrease = iPenStyle == TYPE_TEXT ? 15 : 5;
     
     var iWidth = getSpecificWidth( iPenStyle ) - iDecrease;
     

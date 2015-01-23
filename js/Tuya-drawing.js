@@ -560,15 +560,15 @@ function drawText( text, x, y, iStyle, fontColor )
         var iTextWidth = getTextWidth();
 
         gContext.fillStyle = fontColor;
-        gContext.font = "" + fontSize + 'px 微軟正黑體';
+        gContext.font = "" + fontSize + 'px ' + gsFontFamily;
         gContext.textBaseline = "middle";
         gContext.textAlign = "center";
 
-        var metrics = gContext.measureText( decodeText( text ) ); // 預估原本的字串寬度
-        var sizeRatio = iTextWidth / metrics.width; // 跟要求的寬度的比例
+        var metrics = gContext.measureText( decodeText( text ) ); 
+        var sizeRatio = iTextWidth / metrics.width;
         var newFontSize = fontSize * sizeRatio;
 
-        gContext.font = "" + newFontSize + 'px 微軟正黑體';
+        gContext.font = "" + newFontSize + 'px ' + gsFontFamily;
         gContext.fillText( decodeText( text ), x, y );
         gContext.restore();
     }
@@ -612,15 +612,15 @@ function drawQueueText( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouch
         log( "Q:" + giDrawQueueIndex + "," + giDrawQueueCount + "," + text + "," + x + "," + y + "," + iStyle + "," + fontColor );
 
         gContext.fillStyle = fontColor;
-        gContext.font = "" + fontSize + 'px 微軟正黑體';
+        gContext.font = "" + fontSize + 'px ' + gsFontFamily;
         gContext.textBaseline = "middle";
         gContext.textAlign = "center";
 
-        var metrics = gContext.measureText( decodeText( text ) ); // 預估原本的字串寬度
-        var sizeRatio = iTextWidth / metrics.width; // 跟要求的寬度的比例
+        var metrics = gContext.measureText( decodeText( text ) ); 
+        var sizeRatio = iTextWidth / metrics.width;
         var newFontSize = fontSize * sizeRatio;
 
-        gContext.font = "" + newFontSize + 'px 微軟正黑體';
+        gContext.font = "" + newFontSize + 'px ' + gsFontFamily;
         gContext.fillText( decodeText( text ), x, y );
         gContext.restore();
         
@@ -650,7 +650,6 @@ function drawImage( iImageIndex, x, y, widthRatio, heightRatio )
         var imageObj = new Image();
         
         imageObj.onload = function() {
-            //printDebug( "尺寸" + this.width + "x" + this.height );
             
             var fCanvasWidthRatio = 1;//gCanvas.width / this.width;
             var fCanvasHeightRatio = 1;//gCanvas.height / this.height;
@@ -661,7 +660,6 @@ function drawImage( iImageIndex, x, y, widthRatio, heightRatio )
             y *= fCanvasHeightRatio;
 
             gContext.drawImage( imageObj, x - width / 2, y - height / 2, width, height );
-            //printDebug( "<hr>" + filedata );
         };
 
         imageObj.src = imageData;
@@ -693,8 +691,6 @@ function drawQueueImage( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouc
         var imageObj = new Image();
         
         imageObj.onload = function() {
-            //printDebug( "尺寸" + this.width + "x" + this.height );
-            
             var fCanvasWidthRatio = 1;//gCanvas.width / this.width;
             var fCanvasHeightRatio = 1;//gCanvas.height / this.height;
             var width = this.width * widthRatio * fCanvasWidthRatio;
@@ -704,7 +700,6 @@ function drawQueueImage( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouc
             y *= fCanvasHeightRatio;
 
             gContext.drawImage( imageObj, x - width / 2, y - height / 2, width, height );
-            //printDebug( "<hr>" + filedata );
 
             issueNextQueue( iMode, iPlayNumber, iPlayStyle, TYPE_IMAGE, iBeginTouchOrder, iTouchOrder );
         };

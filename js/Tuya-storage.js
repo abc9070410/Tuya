@@ -16,8 +16,6 @@ function changeToImage()
     
     dataURL = makeDataURI(createBMP( canvasData ), "image/bmp");
     
-    //printDebug( dataURL.length );
-    
     //makeImageObject(makeDataURI(dataURL, "image/bmp"));
     
     //saveFile(makeDataURI(strImgData, strDownloadMime));
@@ -26,8 +24,6 @@ function changeToImage()
     
     //var decode = decode64( dataURL.substring( beginIndex, dataURL.length ) );
     //var encode = encode64( decode );
-    //printDebug( dataURL );
-    //printDebug( encode );
 
     // set canvasImg image src to dataURL
     // so it can be saved as an image
@@ -41,7 +37,7 @@ function changeToImage()
 
 
 
-// 畫出要儲存的圖片(BMP or PNG)
+// (BMP or PNG)
 function showStoredImage( iImageType ) 
 {    
     var ratio = iImageType == IMAGE_TYPE_BMP ? 0.1 : 1;
@@ -92,10 +88,7 @@ var makeImageObject = function(strSource) {
 
 function makeDataURI( strData, strMime ) 
 {
-    var returnValue = "data:" + strMime + ";base64," + strData;
-    //printDebug( returnValue );
-
-    return returnValue;
+    return "data:" + strMime + ";base64," + strData;
 }
 
 // sends the generated file to the client
@@ -373,9 +366,6 @@ function getFile( controller )
     "File name: " + controller.files[0].name + "\n" +
     "File size: " + controller.files[0].size + "\n" +
     "File type: " + controller.files[0].type;
-    
-    //showAlert(s);
-    printDebug( s );
 
     if ( !window.FileReader )
     {
@@ -405,8 +395,7 @@ function loadImage( imageData, sImageName, fRatio, bNeedShow, bFitFileSize )
     var imageObj = new Image();
 
     imageObj.onload = function() {
-        printDebug( "Size:" + this.width + "x" + this.height );
-        
+
         var iCenterX = this.width / 2;
         var iCenterY = this.height / 2;
         
@@ -429,7 +418,6 @@ function loadImage( imageData, sImageName, fRatio, bNeedShow, bFitFileSize )
         //var iWidth = gCanvas.width > this.width ? 
 
         setImageData( imageData, sImageName, widthRatio, heightRatio );
-        printDebug( "存入第" + gImageNowCount + "圖片" );
 
         if ( bNeedShow )
         {
