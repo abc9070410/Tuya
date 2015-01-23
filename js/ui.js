@@ -981,20 +981,6 @@ function getHTMLOfAuthorDiv()
 }
 
 
-function getHTMLOfFontSizeDiv()
-{
-    var string = "";
-    var index = 0;
-
-    for ( var i = 0; i <= 10; i ++ )
-    {
-        var icon = i == getFontSizeIndex() ? "icon check" : "icon target";
-        string += getHTMLOfListItem( icon, ID_ITEM + i, "" + ( 100 + i * 10 ) + "%" );
-    }
-
-    return string;
-}
-
 function setStyle()
 {
     var sStyleClass = "ios7"; // default UI style
@@ -1039,7 +1025,7 @@ function setStyle()
 
 function setLanguage()
 {
-    giLanguageIndex = getLanguageIndex();   
+    giLanguageIndex = getLanguageIndex() - 1;   
 }
 
 function showFontColor( sColor )
@@ -1255,7 +1241,7 @@ function getHTMLOfLanguageDiv()
     
     var string = "";
 
-    for ( var i = 0; i < iCount; i ++ )
+    for ( var i = 1; i < iCount - 1; i ++ )
     {
         var sIcon = abSelected[i] ? "icon check" : "icon target";
         string += getHTMLOfListLinkItem( sIcon, "javascript:clickLanguage(" + i + ");", ID_CLICK_LANGUAGE + i, S_LANGUAGE_ARRAY[i][giLanguageIndex] );
@@ -1270,10 +1256,10 @@ function getHTMLOfFontSizeDiv()
     
     var string = "";
 
-    for ( var i = 0; i < iCount; i ++ )
+    for ( var i = 1; i <= iCount; i ++ )
     {
         var sIcon = i == getFontSizeIndex() ? "icon check" : "icon target";
-        var sText = "" + ( 100 + i * 10 ) + "%";
+        var sText = "" + ( 90 + i * 10 ) + "%";
         string += getHTMLOfListLinkItem( sIcon, "javascript:clickFontSize(" + i + ");", ID_CLICK_FONT_SIZE + i, sText );
     }
     

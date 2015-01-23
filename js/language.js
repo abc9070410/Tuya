@@ -132,7 +132,7 @@ var S_FR = new Array( 'le français', 'le français', 'le français', 'le franç
 var S_TH = new Array( 'อักษรไทย', 'อักษรไทย', 'อักษรไทย', 'อักษรไทย', 'อักษรไทย', 'อักษรไทย', 'อักษรไทย', 'อักษรไทย', 'อักษรไทย', 'อักษรไทย', 'อักษรไทย', 'อักษรไทย', 'อักษรไทย' );
 var S_DE = new Array( 'Deutsch', 'Deutsch', 'Deutsch', 'Deutsch', 'Deutsch', 'Deutsch', 'Deutsch', 'Deutsch', 'Deutsch', 'Deutsch', 'Deutsch', 'Deutsch', 'Deutsch' );
 var S_IT = new Array( 'Italiano', 'Italiano', 'Italiano', 'Italiano', 'Italiano', 'Italiano', 'Italiano', 'Italiano', 'Italiano', 'Italiano', 'Italiano', 'Italiano', 'Italiano' );
-var S_LANGUAGE_ARRAY = new Array( S_ZH, S_EN, S_CN, S_JA, S_KO, S_PT, S_ES, S_HI, S_AR, S_RU, S_FR, S_TH, S_DE, S_IT );
+var S_LANGUAGE_ARRAY = new Array( "", S_ZH, S_EN, S_CN, S_JA, S_KO, S_PT, S_ES, S_HI, S_AR, S_RU, S_FR, S_TH, S_DE, S_IT );
 
 var S_WINDOWS_8 = new Array( 'Windows 8', 'Windows 8', 'Windows 8', 'Windows 8', 'Windows 8', 'Windows 8', 'Windows 8', 'Windows 8', 'Windows 8', 'Windows 8', 'Windows 8', 'Windows 8', 'Windows 8' );
 var S_WINDOWS_8_LIGHT = new Array( 'Windows 8 light', 'Windows 8 light', 'Windows 8 light', 'Windows 8 light', 'Windows 8 light', 'Windows 8 light', 'Windows 8 light', 'Windows 8 light', 'Windows 8 light', 'Windows 8 light', 'Windows 8 light', 'Windows 8 light', 'Windows 8 light' );

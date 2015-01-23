@@ -174,8 +174,8 @@ function getLanguageIndex()
 {
     var value = getItem( KEY_LANGUAGE_INDEX );
     
-    var index = gLocalLanguageIndex > 0 ? gLocalLanguageIndex : 1;
-
+    var index = gLocalLanguageIndex > 0 ? gLocalLanguageIndex : EN;
+    
     return value ? parseInt( value, 10 ) : index;
 }
 

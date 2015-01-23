@@ -541,7 +541,6 @@ function clickFontSizeEvent( event )
 function clickFontSize( iClickIndex )
 {
     setFontSizeIndex( iClickIndex );
-
     updateDiv( ID_FONT_SIZE, getHTMLOfFontSizeDiv() );
 }
 

@@ -6,20 +6,20 @@
 
 // 繁 英 簡 日 韓
 // [giLanguageIndex]
-var ZH = 0; // 繁中
-var EN = 1; // 英文
-var CN = 2; // 簡中
-var JA = 3; // 日文
-var KO = 4; // 韓文
-var PT = 5; // 葡萄牙文 português
-var ES = 6; // 西班牙文 español
-var HI = 7; // 印度文 हिन्दी
-var AR = 8; // 阿拉伯文 العربية‎ 
-var RU = 9; // 俄文 русский язык
-var FR = 10; // 法文 le français 
-var TH = 11; // 泰文 อักษรไทย
-var DE = 12; // 德文 Deutsch
-var IT = 13; // 義大利文 Italiano
+var ZH = 1; // 繁中
+var EN = 2; // 英文
+var CN = 3; // 簡中
+var JA = 4; // 日文
+var KO = 5; // 韓文
+var PT = 6; // 葡萄牙文 português
+var ES = 7; // 西班牙文 español
+var HI = 8; // 印度文 हिन्दी
+var AR = 9; // 阿拉伯文 العربية‎ 
+var RU = 10; // 俄文 русский язык
+var FR = 11; // 法文 le français 
+var TH = 12; // 泰文 อักษรไทย
+var DE = 13; // 德文 Deutsch
+var IT = 14; // 義大利文 Italiano
 var giLanguageIndex = EN; // default language
 var gSupportLanguageCount = 5; // UI .
 var gLocalLanguageIndex = -1; // get the platform local index by Phonegap API
@@ -33,7 +33,7 @@ var PLATFORM_FIREFOXOS = 5;
 var PLATFORM_CHROMEOS = 6;
 var PLATFORM_WINDOWS_8 = 7;
 var PLATFORM_BROWSER = 8;
-var giPlatform = PLATFORM_WINDOWS_8; // default platform
+var giPlatform = PLATFORM_BROWSER; // default platform
 
 var B_ON_DEVICE = true;
 
