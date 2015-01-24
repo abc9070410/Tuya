@@ -1,4 +1,4 @@
-
+﻿
 "use strict";
 
 var _areInsertNotificationsEnabled; //set this to true if you are running in IE11

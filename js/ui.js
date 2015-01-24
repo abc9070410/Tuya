@@ -1,4 +1,4 @@
-
+﻿
 "use strict";
 
 //
@@ -203,7 +203,7 @@ function blockUI()
 function initUI()
 {
     var string = "";
-    
+
     gsNowDivID = isLanguageSet() ? ID_MAIN : ID_LANGUAGE;
 
     // header

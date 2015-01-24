@@ -1,4 +1,4 @@
-
+﻿
 "use strict";
 
 //<access origin="http://127.0.0.1*" />
@@ -33,7 +33,7 @@ var PLATFORM_FIREFOXOS = 5;
 var PLATFORM_CHROMEOS = 6;
 var PLATFORM_WINDOWS_8 = 7;
 var PLATFORM_BROWSER = 8;
-var giPlatform = PLATFORM_BROWSER; // default platform
+var giPlatform = PLATFORM_CHROMEOS; // default platform
 
 var B_ON_DEVICE = true;
 
@@ -602,6 +602,7 @@ var gbDivWasChanged = false;
 
 var gStoredItem = {};
 var gsFontFamily = "Times New Roman";
+var gsTouchStartDivID = "";
 
 var gbDebug = false;
 

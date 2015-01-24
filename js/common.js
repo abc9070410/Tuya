@@ -1,4 +1,4 @@
-
+﻿
 "use strict";
 
 
@@ -1865,6 +1865,7 @@ function inCanvas( iTouchX, iTouchY )
 function touchStartEvent( iTouchX, iTouchY )
 {
     gbTouchInvalid = isMessageOn();
+    gsTouchStartDivID = gsNowDivID;
     
     if ( gbTouchInvalid )
         return;
@@ -1925,7 +1926,7 @@ function touchEndEvent( iTouchX, iTouchY )
 {
     if ( gbTouchInvalid )
         return;
-
+        
     if ( isSideMenuOn() &&
          !isMessageOn() && 
          iTouchX > $.ui.getSideMenuPosition() )
@@ -2060,7 +2061,10 @@ function addGlobal()
 
 function drawAllowed()
 {
-    return !penIsLock() && !isSideMenuOn() && isNowCanvasMode( EDIT_MODE ) && 
+    return !penIsLock() &&
+           !isSideMenuOn() && 
+           isNowCanvasMode( EDIT_MODE ) && 
+           gsTouchStartDivID != ID_MAIN &&
            ( isPaintPageNow() || gsNowDivID == ID_ABOUT_AUTHOR );
 }
 
