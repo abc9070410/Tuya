@@ -580,10 +580,20 @@ function navSupported()
     var sStyle = S_STYLE_ARRAY[getStyleIndex()].toString();
     
     // not support nav for Win UI Style or WP7/8 platform 
-    return ( //sStyle != S_WINDOWS_8.toString() && 
-             //sStyle != S_WINDOWS_8_LIGHT.toString() &&
-             //giPlatform != PLATFORM_FIREFOXOS &&
-             giPlatform != PLATFORM_WP );
+    if ( giPlatform == PLATFORM_WP )
+    {
+        return false;
+    }
+    
+    if ( sStyle == S_WINDOWS_8.toString() || sStyle == S_WINDOWS_8_LIGHT.toString() )
+    {
+        if ( giPlatform == PLATFORM_FIREFOXOS )
+        {
+            return false;
+        }
+    }
+    
+    return true;
 }
 
 function shouldStyleSkipped( iStyleIndex )
@@ -591,7 +601,8 @@ function shouldStyleSkipped( iStyleIndex )
     var sStyle = S_STYLE_ARRAY[iStyleIndex].toString();
     if ( sStyle == S_WINDOWS_8.toString() || sStyle == S_WINDOWS_8_LIGHT.toString() )
     {
-        if ( giPlatform == PLATFORM_ANDROID )
+        if ( giPlatform == PLATFORM_ANDROID ||
+             giPlatform == PLATFORM_FIREFOXOS )
         {
             return true;
         }

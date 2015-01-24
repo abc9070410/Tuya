@@ -1451,6 +1451,10 @@ function clickSaveDrawingFile()
         window.navigator.msSaveBlob(blobObject, sFileName );
         //showMessage( S_SUCCESS[giLanguageIndex] + " : " + sFileName );
     }
+    else if ( navigator.getDeviceStorage ) // for FirefoxOS only
+    {
+        saveImageOnFirefoxOS( IMAGE_TYPE_PNG );
+    }
     else 
     {
         this.href = gsPngDataURL;
@@ -1491,11 +1495,16 @@ function clickSaveAnimationFile()
             window.navigator.msSaveBlob(blobObject, sFileName );
             //showMessage( S_SUCCESS[giLanguageIndex] + " : " + sFileName );
         }
-        else if ( typeof window.canvas2ImagePlugin != 'undefined' )
+        else if ( navigator.getDeviceStorage ) // for FirefoxOS only
+        {
+            saveImageOnFirefoxOS( IMAGE_TYPE_BMP );
+        }
+        else if ( true )
         {
             //saveImageFileOnDevice( IMAGE_TYPE_BMP ); -> save PNG/JPG only in Android
-            saveImageFileOnDevice2( IMAGE_TYPE_BMP );
-            //goURL( gsBmpDataURL ); -> not work in Android
+            //saveImageFileOnDevice2( IMAGE_TYPE_BMP );
+            //goURL( gsBmpDataURL ); // -> not work in Android
+saveAndSend( getImageBlob( IMAGE_TYPE_BMP ) );
             
             // http://blogs.telerik.com/appbuilder/posts/13-12-23/cross-window-communication-with-cordova%27s-inappbrowser
             // http://plugins.cordova.io/#/package/org.apache.cordova.inappbrowser

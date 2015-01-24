@@ -200,7 +200,7 @@ function createBMP( oData )
     aInfoHeader.push(iDataSize % 256); 
 
     for (var i=0;i<16;i++) {
-        aInfoHeader.push(0);	// these bytes not used
+        aInfoHeader.push(0);    // these bytes not used
     }
 
     var iPadding = (4 - ((iWidth * 3) % 4)) % 4;
@@ -529,23 +529,23 @@ function saveImageFileOnDevice( iImageType )
 function saveImageFileOnDevice2( iImageType )
 {
     window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(dir) {
-		console.log("got main dir",dir);
-		dir.getFile("log.bmp", {create:true}, function(fileEntry) {
-			console.log("got the file", fileEntry);
+        console.log("got main dir",dir);
+        dir.getFile("log.bmp", {create:true}, function(fileEntry) {
+            console.log("got the file", fileEntry);
             showMessage( "got the file" );
-			writeImage( fileEntry, iImageType );			
-		});
-	});
+            writeImage( fileEntry, iImageType );            
+        });
+    });
 }
 
 function writeImage( fileEntry, iImageType ) {
-	console.log("going to log " + iImageType);
+    console.log("going to log " + iImageType);
     showMessage("fileEntry:" + fileEntry );
     
     try {
-	fileEntry.createWriter(function(fileWriter) {
-		
-		fileWriter.onwriteend = function(e) {
+    fileEntry.createWriter(function(fileWriter) {
+        
+        fileWriter.onwriteend = function(e) {
             showMessage('Write completed.');
           };
 
@@ -553,12 +553,12 @@ function writeImage( fileEntry, iImageType ) {
             showMessage('Write failed: ' + e.toString());
           };
 
-		
-		var blob = getImageBlob( iImageType );
-		fileWriter.write(blob);
-		console.log("ok, in theory i worked");
+        
+        var blob = getImageBlob( iImageType );
+        fileWriter.write(blob);
+        console.log("ok, in theory i worked");
         showMessage( "OK" );
-	}, errorHandler);
+    }, errorHandler);
     }
     catch( err )
     {
@@ -566,7 +566,35 @@ function writeImage( fileEntry, iImageType ) {
     }
 }
 
+
 function errorHandler()
 {
     showMessage( "ERROR" );
 }
+
+
+function saveImageOnFirefoxOS( iImageType ) 
+{
+    try 
+    {
+        var device = navigator.getDeviceStorage( "pictures" );
+        var blob = getImageBlob( iImageType );
+        var sFileName = getImageFileName( iImageType );
+        var request = device.addNamed( blob, sFileName );
+
+        request.onsuccess = function () {
+            showMessage( S_SUCCESS[giLanguageIndex] + " : " + sFileName );
+        }
+
+        // An error could occur if a file with the same name already exist
+        request.onerror = function () {
+            alert( "SAVE FAIL: " + this.error.name );
+        }
+    } 
+    catch(err)
+    {
+        alert( "ErrorStack: " + err.stack  );
+    }
+ }
+
+
