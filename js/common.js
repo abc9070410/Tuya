@@ -109,12 +109,10 @@ function initSetting()
     //removeAllItem(); // for recovery when the wrong items are stored
     //removeItem( KEY_TICKET_CATEGORY_INDEXS );
 
+    setLanguage();
     setDocumentTitle( S_APP_NAME[giLanguageIndex] );
-    
     setRegularColor(); // set the color array
-    
-    giLanguageIndex = getLanguageIndex(); // set language
-    
+
     // set color and image
     gsBackgroundImage = getBackgroundImage();
     showBackgroundImage( gsBackgroundImage );
@@ -122,18 +120,6 @@ function initSetting()
 
     // ---- Tuya ----
     initDelayPenHistoryCount();    
-    
-    /*
-    var test = "21 #000000 #8027a7 5 80 100 50 165 8-12 543 165 1-12 648 191 1-12 667 220 1-12 698 213 1";
-    var iLastIndex = test.split( MOTION_GAP ).length - 1;
-    
-    showAlert( iLastIndex + "_" + test.split( MOTION_GAP )[iLastIndex] );
-    
-    if ( !test.split( MOTION_GAP )[iLastIndex] )
-    {
-        showAlert( "NON: " + test.split( MOTION_GAP )[iLastIndex] );
-    }
-    */
     
     //parseSingleLanguage( gsLanguage, ZH );
     //buildLanguage( gsLanguage, gasLanguage );
@@ -178,11 +164,11 @@ function getRelatedUrlByIndex( index )
     }
     else if ( S_RELATED_LINKS_ARRAY[index].toString() === S_WINDOWS_STORE.toString() )
     {
-        return "https://play.google.com/store/apps/details?id=sk.phonegap.timetable";
+        return "http://apps.microsoft.com/windows/en-us/app/tuya/19b2056a-6c93-4f89-8844-d583b9963331";
     }
     else if ( S_RELATED_LINKS_ARRAY[index].toString() === S_CHROME_WEB_STORE.toString() )
     {
-        return "https://chrome.google.com/webstore";
+        return "https://chrome.google.com/webstore/detail/tuya/mpgcknahnhkphbjahkhpkdpgaipolkgb?utm_source=chrome-ntp-icon";
     }
     else if ( S_RELATED_LINKS_ARRAY[index].toString() === S_FIREFOX_MARKETPLACE.toString() )
     {
@@ -863,12 +849,14 @@ function initCanvas( height, width )
 
 function enableSideMenu()
 {
-    $.ui.toggleSideMenu( true ); // always call this function by menu
+    if ( navSupported() )
+        $.ui.toggleSideMenu( true ); // always call this function by menu
 }
 
 function disableSideMenu()
 {
-    $.ui.toggleSideMenu( false ); // always call this function by menu
+    if ( navSupported() )
+        $.ui.toggleSideMenu( false ); // always call this function by menu
 }
 
 
@@ -902,48 +890,51 @@ function clickRedo()
 
 function clickGoBackToPenStyle()
 {
-    scrollToTop( ID_NAV );
-    updateDiv( ID_NAV, getHTMLOfNavPenStyleDiv() );
+    //scrollToTop( ID_NAV );
+    updateDiv( getNavID(), getHTMLOfNavPenStyleDiv() );
     
-    initPaintPage( gsLastDivID ); // suppose that the demo was just played
+    if ( navSupported() )
+    {
+        initPaintPage( gsLastDivID ); // suppose that the demo was just played
+    }
     
     giNowSideMenu = SIDEMENU_PEN_STYLE;
 }
 
 function clickGoBackToPaint()
 {
-    scrollToTop( ID_NAV );
-    updateDiv( ID_NAV, getHTMLOfNavPaintDiv() );
+    //scrollToTop( ID_NAV );
+    updateDiv( getNavID(), getHTMLOfNavPaintDiv() );
     giNowSideMenu = SIDEMENU_PAINT;
 }
 
 function clickPenRecordSideMenu()
 {
-    updateDiv( ID_NAV, getHTMLOfNavPenRecordDiv() );
+    updateDiv( getNavID(), getHTMLOfNavPenRecordDiv() );
     giNowSideMenu = SIDEMENU_PEN_RECORD;
 }
 
 function clickPenStyleSideMenu()
 {
-    updateDiv( ID_NAV, getHTMLOfNavPenStyleDiv() );
+    updateDiv( getNavID(), getHTMLOfNavPenStyleDiv() );
     giNowSideMenu = SIDEMENU_PEN_STYLE;
 }
 
 function clickColorSideMenu()
 {
-    updateDiv( ID_NAV, getHTMLOfNavColorDiv() );
+    updateDiv( getNavID(), getHTMLOfNavColorDiv() );
     giNowSideMenu = SIDEMENU_COLOR;
 }
 
 function clickForeColorSideMenu()
 {
-    updateDiv( ID_NAV, getHTMLOfNavColorListDiv( FOREGROUND ) );
+    updateDiv( getNavID(), getHTMLOfNavColorListDiv( FOREGROUND ) );
     giNowSideMenu = SIDEMENU_FORE_COLOR;
 }
 
 function clickBackColorSideMenu()
 {
-    updateDiv( ID_NAV, getHTMLOfNavColorListDiv( BACKGROUND ) );
+    updateDiv( getNavID(), getHTMLOfNavColorListDiv( BACKGROUND ) );
     giNowSideMenu = SIDEMENU_BACK_COLOR;
 }
 
@@ -1052,18 +1043,18 @@ function clickCutPenHistory()
 function clickEnableProcessBar()
 {
     setProcessBarEnabled( !getProcessBarEnabled() );
-    updateDiv( ID_NAV, getHTMLOfNavPlayDiv() );
+    updateDiv( getNavID(), getHTMLOfNavPlayDiv() );
 }
 
 function clickUnifyPlaySpeed()
 {
     setPlaySpeedUnified( !getPlaySpeedUnified() );
-    updateDiv( ID_NAV, getHTMLOfNavPlayDiv() );
+    updateDiv( getNavID(), getHTMLOfNavPlayDiv() );
 }
 
 function clickPlaySideMenu()
 {
-    updateDiv( ID_NAV, getHTMLOfNavPlayDiv() );
+    updateDiv( getNavID(), getHTMLOfNavPlayDiv() );
     giNowSideMenu = SIDEMENU_PLAY;
 }
 
@@ -1324,7 +1315,7 @@ function clickFileSideMenu()
         }
     }
 
-    updateDiv( ID_NAV, getHTMLOfNavFileDiv() );
+    updateDiv( getNavID(), getHTMLOfNavFileDiv() );
     
     var e;
     
@@ -1374,7 +1365,7 @@ function issueChangeFileName()
 
 function clickNewFile()
 {
-    var sMessage = S_NEW[giLanguageIndex] + S_FILE[giLanguageIndex] + " ?";
+    var sMessage = S_NEW[giLanguageIndex] + " " + S_FILE[giLanguageIndex] + " ?";
     var fDoneFunction = issueNewFileDefault;
     showConfirmMessage( sMessage, fDoneFunction );
 }
@@ -1392,7 +1383,7 @@ function issueNewFile( bShowMessage )
     
     if ( bShowMessage )
     {
-        var sMessage = S_NEW[giLanguageIndex] + S_FILE[giLanguageIndex] + S_SUCCESS[giLanguageIndex];
+        var sMessage = S_NEW[giLanguageIndex] + " " + S_FILE[giLanguageIndex] + " " + S_SUCCESS[giLanguageIndex];
         showMessage( sMessage );
     }
     
@@ -1620,7 +1611,7 @@ function setSpecificWidth( iPenStyle, iWidth )
 function clickDelaySecondIncrease()
 {
     setDelaySecond( getDelaySecond() + 1 );
-    updateDiv( ID_NAV, getHTMLOfNavPenStyleOtherDiv() );
+    updateDiv( getNavID(), getHTMLOfNavPenStyleOtherDiv() );
 }
 
 function clickDelaySecondDecrease()
@@ -1628,7 +1619,7 @@ function clickDelaySecondDecrease()
     if ( getDelaySecond() > 2 )
     {
         setDelaySecond( getDelaySecond() - 1 );
-        updateDiv( ID_NAV, getHTMLOfNavPenStyleOtherDiv() );
+        updateDiv( getNavID(), getHTMLOfNavPenStyleOtherDiv() );
     }
 }
 
@@ -1639,20 +1630,17 @@ function clickPenStyleDemoIncreaseDefault()
 
 function clickPenStyleDemoIncrease( iPenStyle )
 {
-    var iIncrease = 5;
-    
-    if ( iPenStyle == TYPE_TEXT )
-    {
-        iIncrease = 15;
-    }
+    var iIncrease = iPenStyle == TYPE_TEXT ? 15 : 5;
     
     var iWidth = getSpecificWidth( iPenStyle ) + iIncrease;
-    
+
     setSpecificWidth( iPenStyle, iWidth );
     
     addGlobal();
     
     showDemoPage( iPenStyle );
+    
+    alert( iWidth + "," +getSpecificWidth( iPenStyle ) );
 }
 
 function clickPenStyleDemoDecreaseDefault()
@@ -1681,7 +1669,7 @@ function clickPlaySpeedUp()
     if ( getPlaySpeed() > 5 )
     {
         setPlaySpeed( getPlaySpeed() - 5 );
-        updateDiv( ID_NAV, getHTMLOfNavPlayDiv() );
+        updateDiv( getNavID(), getHTMLOfNavPlayDiv() );
     }
 }
 
@@ -1689,7 +1677,7 @@ function clickPlaySpeedDown()
 {
     setPlaySpeed( getPlaySpeed() + 5 );
     
-    updateDiv( ID_NAV, getHTMLOfNavPlayDiv() );
+    updateDiv( getNavID(), getHTMLOfNavPlayDiv() );
 }
 
 function clickConfirm()
@@ -1707,7 +1695,7 @@ function clickPenStyleLine()
 function showDemoPage( iPenStyle )
 {
     log( "-showDemoPage:" + iPenStyle );
-    updateDiv( ID_NAV, getHTMLOfNavPenStyleDemoDiv( iPenStyle ) );
+    updateDiv( getNavID(), getHTMLOfNavPenStyleDemoDiv( iPenStyle ) );
     playDemo( iPenStyle );
 }
 
@@ -1842,7 +1830,7 @@ function clickPenStyleDot()
 function clickPenStyleOther()
 {           
     giNowSideMenu = SIDEMENU_PEN_STYLE_OTHER;
-    updateDiv( ID_NAV, getHTMLOfNavPenStyleOtherDiv() );
+    updateDiv( getNavID(), getHTMLOfNavPenStyleOtherDiv() );
 }
 
 function clickPenStyleImage()
@@ -1858,7 +1846,7 @@ function clickPenStyleImage()
     }
         
     giNowSideMenu = SIDEMENU_PEN_STYLE_IMAGE;
-    updateDiv( ID_NAV, getHTMLOfNavPenStyleImageDiv() );
+    updateDiv( getNavID(), getHTMLOfNavPenStyleImageDiv() );
 
     if ( notSupportJsLink() )
     {
@@ -2063,7 +2051,8 @@ function addGlobal()
     gPenHistory += setGlobal( getBackColor(), getForeColor(), getPenWidth(), getRectangleWidth(), getCircleWidth(), getEraserWidth(), getTextWidth(),  getPlaySpeed() );
     gPenHistory = gPenHistory.replace( MOTION_GAP + TOUCH_GAP, TOUCH_GAP );
 
-    if ( isPaintPageNow() )
+    if ( isPaintPageNow() || 
+         !navSupported() ) // do any setting on ID_MENU page if nav(side menu) is not supported. 
     {
         saveGlobal(); // avoid overwritting the setting after menu button is clicked
     }

@@ -151,7 +151,7 @@ var S_FIREFOX_MARKETPLACE = new Array( 'Firefox Marketplace', 'Firefox Marketpla
 var S_CHROME_WEB_STORE = new Array( 'Chrome Web Store', 'Chrome Web Store',  'Chrome Web Store', 'Chrome Web Store', 'Chrome Web Store', 'Chrome Web Store',  'Chrome Web Store', 'Chrome Web Store', 'Chrome Web Store', 'Chrome Web Store',  'Chrome Web Store', 'Chrome Web Store', 'Chrome Web Store' );
 var S_TIZEN_STORE = new Array( 'Tizen Store', 'Tizen Store',  'Tizen Store', 'Tizen Store', 'Tizen Store', 'Tizen Store',  'Tizen Store', 'Tizen Store', 'Tizen Store', 'Tizen Store',  'Tizen Store', 'Tizen Store', 'Tizen Store' );
 var S_UBUNTU_APP_DIRECTORY = new Array( 'Ubuntu Apps Directory', 'Ubuntu Apps Directory',  'Ubuntu Apps Directory', 'Ubuntu Apps Directory', 'Ubuntu Apps Directory', 'Ubuntu Apps Directory',  'Ubuntu Apps Directory', 'Ubuntu Apps Directory', 'Ubuntu Apps Directory', 'Ubuntu Apps Directory',  'Ubuntu Apps Directory', 'Ubuntu Apps Directory', 'Ubuntu Apps Directory' );
-var S_RELATED_LINKS_ARRAY = new Array( S_GITHUB, S_GOOGLE_PLAY, S_WINDOWS_STORE,  S_FIREFOX_MARKETPLACE, S_CHROME_WEB_STORE, S_TIZEN_STORE, S_UBUNTU_APP_DIRECTORY );
+var S_RELATED_LINKS_ARRAY = new Array( S_GITHUB, S_WINDOWS_STORE, S_CHROME_WEB_STORE,  S_FIREFOX_MARKETPLACE, S_TIZEN_STORE, S_GOOGLE_PLAY, S_UBUNTU_APP_DIRECTORY );
 
 var S_LINE_STYLE_ARRAY = new Array( S_NONE, S_NORMAL, S_CRACK, S_DOTTED );
 var S_RECTANGLE_STYLE_ARRAY = new Array( S_NONE, S_SOLID, S_UNSOLID );

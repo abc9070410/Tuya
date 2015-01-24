@@ -603,12 +603,17 @@ var gbDivWasChanged = false;
 var gStoredItem = {};
 var gsFontFamily = "Times New Roman";
 
+var gbDebug = false;
+
+
+
+
+
 
 
 
 //var gsLanguage = "";
 //var gasLanguage = new Array( gsZH, gsEN, gsCN, gsJA, gsKO, gsPT, gsES, gsHI, gsAR, gsRU, gsFR, gsTH, gsDE, gsIT );
-
 
 
 

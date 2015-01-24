@@ -87,20 +87,20 @@ function changeHash( sPageID )
     // disable the sort option
     if ( isListID( gsLastDivID ) && !isListID( sPageID ) && sPageID.indexOf( ID_ITEM ) != 0 )
     {
-        //if ( navSupported() )
+        if ( navSupported() )
         {
             updateDiv( ID_HEADER, getHTMLOfHeaderDiv() );
-            updateDiv( ID_NAV, getHTMLOfNavDiv() );
+            updateDiv( getNavID(), getHTMLOfNavDiv() );
         }
 
-        //updateDiv( ID_NAV, getHTMLOfNavbarsDiv() );
+        //updateDiv( getNavID(), getHTMLOfNavbarsDiv() );
         gMergeListsList = null; // clean the result
 
         log( "set nav & header to back to normal" );
     }
     
     updateDiv( ID_HEADER, getHTMLOfHeaderDiv() );
-    updateDiv( ID_NAV, getHTMLOfNavDiv() );
+    updateDiv( getNavID(), getHTMLOfNavDiv() );
     //updateDiv( ID_NAVBAR, getHTMLOfNavbarDiv() );
     
     
@@ -113,7 +113,8 @@ function changeHash( sPageID )
 
     if ( sPageID === ID_MENU )
     {
-       updateDiv( sPageID, getHTMLOfNavDiv() );
+        clickMenu();
+        //updateDiv( sPageID, getHTMLOfNavDiv() );
     }
     else if ( sPageID === ID_MAIN )
     {
@@ -526,8 +527,8 @@ function getHTMLOfHeaderDiv()
         
         string += getHTMLOfHeaderIconItem( "button icon stack", "#" + getConfirmNextPageID(), getConfirmNextPageID(), S_CONFIRM[giLanguageIndex] );
     }
-    else if ( navSupported() )
-    {   
+    else
+    {
         if ( gsNowDivID == ID_MAIN || !isNotBeginPage() )
         {
         
@@ -542,7 +543,14 @@ function getHTMLOfHeaderDiv()
         {
             string += getHTMLOfHeaderIconItem( "button icon refresh", "javascript:clickUndo();", ID_CLICK_UNDO, "" );
 
-            string += getHTMLOfHeaderIconItem( "button icon pencil", "javascript:clickMenu();", ID_CLICK_MENU, "" );
+            if ( navSupported() )
+            {
+                string += getHTMLOfHeaderIconItem( "button icon pencil", "javascript:clickMenu();", ID_CLICK_MENU, "" );
+            }
+            else
+            {
+                string += "<a href='#" + ID_MENU + "' class='button icon' style='float:right' data-transition='up'>" + getIcon( ID_CLICK_MENU ) + "</a>";
+            }
             
             if ( isNowCanvasMode( EDIT_MODE ) )
             {
@@ -559,11 +567,7 @@ function getHTMLOfHeaderDiv()
             string += getHTMLOfHeaderIconItem( "button icon paper", "javascript:clickNewFile();", ID_CLICK_NEW_FILE, "" );
         }
     }
-    else
-    {
-        string += "<a href='#" + ID_MENU + "' class='button icon stack' style='float:right' data-transition='up'>" + S_MENU[giLanguageIndex] + "</a>";
-    }
-
+    
     return string;
 }
 
@@ -571,13 +575,13 @@ function getHTMLOfHeaderDiv()
 // should enable Navbar (footer menu) if the platorm does not support Nav
 function navSupported()
 {
-    return true;
+    //return true;
 
     var sStyle = S_STYLE_ARRAY[getStyleIndex()].toString();
     
     // not support nav for Win UI Style or WP7/8 platform 
-    return ( sStyle != S_WINDOWS_8.toString() && 
-             sStyle != S_WINDOWS_8_LIGHT.toString() &&
+    return ( //sStyle != S_WINDOWS_8.toString() && 
+             //sStyle != S_WINDOWS_8_LIGHT.toString() &&
              giPlatform != PLATFORM_WP &&
              giPlatform != PLATFORM_FIREFOXOS );
 }
@@ -600,7 +604,7 @@ function togglePaintSideMenu( bReflash )
 {
     if ( bReflash && navSupported() )
     {
-        updateDiv( ID_NAV, getHTMLOfNavPaintDiv() );
+        updateDiv( getNavID(), getHTMLOfNavPaintDiv() );
     }
 
     enableSideMenu();
@@ -609,7 +613,7 @@ function togglePaintSideMenu( bReflash )
 
 function clickPaintSideMenu()
 {
-    updateDiv( ID_NAV, getHTMLOfNavPaintDiv() );
+    updateDiv( getNavID(), getHTMLOfNavPaintDiv() );
     giNowSideMenu = SIDEMENU_PAINT;
 }
 
@@ -650,8 +654,6 @@ function getHTMLOfNavbarDiv()
 
 function getHTMLOfNavDiv()
 {
-    //return getHTMLOfNavFileDiv(); // TEST 20141226
-
     var string = "";
 
     string += getHTMLOfListItem( "icon paper mini", getPaintPageID(), S_CANVAS[giLanguageIndex] );
@@ -684,7 +686,7 @@ function getHTMLOfNavPlayDiv()
     var string = "";
     
     var sIcon = "";
-    
+
     string += getHTMLOfGoBack();
     
     string += getHTMLOfListLinkItem( "icon camera", "javascript:clickPlay(" + PLAY_STYLE_OBVERSE + ");", ID_CLICK_PLAY_STYLE_OBVERSE, S_OBVERSE[giLanguageIndex] + S_PLAY[giLanguageIndex] );
@@ -709,6 +711,7 @@ function getHTMLOfNavPenRecordDiv()
 {
     var string = "";
     
+
     string += getHTMLOfGoBack();
     
     var iTouchCount = getTouchCount() - 1;
@@ -728,18 +731,31 @@ function getHTMLOfNavPenRecordDiv()
 
 function getHTMLOfGoBack()
 {
-    return getHTMLOfListLinkItem( "icon left", "javascript:clickGoBackToPaint();", ID_CLICK_GO_BACK_TO_PAINT, S_GO_BACK[giLanguageIndex] );
+    return getHTMLOfGoBackToCanvas() + getHTMLOfListLinkItem( "icon left", "javascript:clickGoBackToPaint();", ID_CLICK_GO_BACK_TO_PAINT, S_GO_BACK[giLanguageIndex] );
 }
 
 function getHTMLOfGoBackToPenStyle()
 {
-    return getHTMLOfListLinkItem( "icon left", "javascript:clickGoBackToPenStyle();", ID_CLICK_GO_BACK_TO_PEN_STYLE, S_GO_BACK[giLanguageIndex] );
+    return getHTMLOfGoBackToCanvas() + getHTMLOfListLinkItem( "icon left", "javascript:clickGoBackToPenStyle();", ID_CLICK_GO_BACK_TO_PEN_STYLE, S_GO_BACK[giLanguageIndex] );
+}
+
+function getHTMLOfGoBackToCanvas()
+{
+    if ( navSupported() )
+    {
+        return "";
+    }
+    else // need the back button to canvas, cause there is no side menu
+    {
+        return getHTMLOfListItem( "icon paper", getPaintPageID(), S_GO_BACK_TO[giLanguageIndex] + S_CANVAS[giLanguageIndex] );
+    }
 }
 
 function getHTMLOfNavPenStyleDiv()
 {
     var string = "";
     
+
     string += getHTMLOfGoBack();
     
     string += getHTMLOfListLinkItem( "icon pencil", "javascript:clickPenStyleLine();", ID_CLICK_PEN_STYLE_LINE, S_LINE[giLanguageIndex] );
@@ -830,6 +846,7 @@ function getHTMLOfNavColorDiv()
 {
     var string = "";
     
+
     string += getHTMLOfGoBack();
 
     string += getHTMLOfListLinkItem( "icon picture", "javascript:clickForeColorSideMenu();", ID_CLICK_FORE_COLOR_SIDE_MENU, S_FOREGROUND[giLanguageIndex] );
@@ -842,6 +859,7 @@ function getHTMLOfNavColorListDiv( iColorType )
 {
     var string = "";
     
+
     string += getHTMLOfGoBack();
     
     //setRandomColor();
@@ -890,6 +908,7 @@ function getHTMLOfNavFileDiv()
         gsFileName = getDefaultImageFileName();
     }
     
+
     string += getHTMLOfGoBack();
     string += getHTMLOfListLinkItem( "icon new", "javascript:clickNewFile();", ID_CLICK_NEW_FILE, S_NEW[giLanguageIndex] );
     //string += getHTMLOfListLinkItem( "icon target", "javascript:clickOpenFile();", S_OPEN[giLanguageIndex] );
@@ -959,7 +978,7 @@ function getHTMLOfAppDiv()
     
     string += getHTMLOfCanvas(); 
 
-    for ( var i = 0; i < 1/*S_RELATED_LINKS_ARRAY.length*/; i ++ )
+    for ( var i = 0; i < 3/*S_RELATED_LINKS_ARRAY.length*/; i ++ )
     {
         string += getHTMLOfListLinkItem( "icon info", "javascript:goRelatedLinkURL(" + i + ");", ID_CLICK_RELATED_LINK + i, S_RELATED_LINKS_ARRAY[i][giLanguageIndex] );
     }
@@ -1397,6 +1416,11 @@ function isDarkThemeNow()
     return asStyle == S_ANDROID ||
            asStyle == S_WINDOWS_8 ||
            asStyle == S_TIZEN;
+}
+
+function getNavID()
+{
+    return navSupported() ? ID_NAV : ID_MENU;
 }
 
 // --------------
