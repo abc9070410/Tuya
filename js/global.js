@@ -33,7 +33,7 @@ var PLATFORM_FIREFOXOS = 5;
 var PLATFORM_CHROMEOS = 6;
 var PLATFORM_WINDOWS_8 = 7;
 var PLATFORM_BROWSER = 8;
-var giPlatform = PLATFORM_CHROMEOS; // default platform
+var giPlatform = PLATFORM_FIREFOXOS; // default platform
 
 var B_ON_DEVICE = true;
 
@@ -450,7 +450,7 @@ var geOptions = {
         REFRESH_RATE: 50,
         APP_ID: "MrQuiz_SingerQuiz_other"
     };
-var geInneractiveAD = giPlatform == PLATFORM_FIREFOXOS ? Inneractive.createAd( geOptions ) : null;
+var geInneractiveAD = null;
 
 
 

@@ -123,6 +123,11 @@ function initSetting()
     
     //parseSingleLanguage( gsLanguage, ZH );
     //buildLanguage( gsLanguage, gasLanguage );
+    
+    if ( !notSupportInneractive() )
+    {
+        geInneractiveAD = Inneractive.createAd( geOptions );
+    }
 }
 
 
@@ -1404,7 +1409,6 @@ function clickOpenFile()
 function writeHTMLOfSaveCanvas( sDataURL )
 {
     var sHTML = "";
-    alert( "1.8");
 
     sHTML += getHTMLOfText( S_FILE_SAVE_BY_RIGHT_CLICK_MESSAGE[giLanguageIndex], getFontRatio() );
     //sHTML += getHTMLOfNewLine( 1 );
@@ -1429,7 +1433,6 @@ function writeHTMLOfSaveCanvas( sDataURL )
         alert("loaderror");
     });
     */
-    alert( "5" );
     //var w = window.open('about:blank', '_system', 'location=yes'); // _blank:InAppBrower
     //w.document.write( sHTML );
 }
@@ -1639,8 +1642,6 @@ function clickPenStyleDemoIncrease( iPenStyle )
     addGlobal();
     
     showDemoPage( iPenStyle );
-    
-    alert( iWidth + "," +getSpecificWidth( iPenStyle ) );
 }
 
 function clickPenStyleDemoDecreaseDefault()
@@ -2807,6 +2808,12 @@ function buildLanguage( sText, asData )
     log( sAns );
 }
 
+function notSupportInneractive()
+{
+    //return giPlatform != PLATFORM_FIREFOXOS;
+    return true;
+}
+
 function notSupportStored()
 {
     return giPlatform == PLATFORM_CHROMEOS;
@@ -2816,7 +2823,8 @@ function notSupportJsLink()
 {
     return giPlatform == PLATFORM_WP ||
            giPlatform == PLATFORM_WINDOWS_8 ||
-           giPlatform == PLATFORM_CHROMEOS;
+           giPlatform == PLATFORM_CHROMEOS ||
+           giPlatform == PLATFORM_FIREFOXOS;
 }
 
 function notSupportDefaultIcon()

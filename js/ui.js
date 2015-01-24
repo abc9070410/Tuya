@@ -582,8 +582,8 @@ function navSupported()
     // not support nav for Win UI Style or WP7/8 platform 
     return ( //sStyle != S_WINDOWS_8.toString() && 
              //sStyle != S_WINDOWS_8_LIGHT.toString() &&
-             giPlatform != PLATFORM_WP &&
-             giPlatform != PLATFORM_FIREFOXOS );
+             //giPlatform != PLATFORM_FIREFOXOS &&
+             giPlatform != PLATFORM_WP );
 }
 
 function shouldStyleSkipped( iStyleIndex )
