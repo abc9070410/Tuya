@@ -826,7 +826,7 @@ function getHTMLOfNavPenStyleImageDiv()
     string += getHTMLOfGoBackToPenStyle();
     
     var sText = S_OPEN[giLanguageIndex] + "<br><br><input id='" + ID_IMG_FILE_SELECTOR + "' type='file' value='IMG' ";
-    sText += notSupportJsLink() ? "/>" : "onchange='openImage();'/>";
+    sText += notSupportJsLink() ? "/>" : "onchange='openImageStuff();'/>";
 
     string += getHTMLOfListText( "icon folder", sText );
     
@@ -989,7 +989,7 @@ function getHTMLOfAppDiv()
     
     string += getHTMLOfCanvas(); 
 
-    for ( var i = 0; i < 3/*S_RELATED_LINKS_ARRAY.length*/; i ++ )
+    for ( var i = 0; i < 4/*S_RELATED_LINKS_ARRAY.length*/; i ++ )
     {
         string += getHTMLOfListLinkItem( "icon info", "javascript:goRelatedLinkURL(" + i + ");", ID_CLICK_RELATED_LINK + i, S_RELATED_LINKS_ARRAY[i][giLanguageIndex] );
     }

@@ -33,7 +33,7 @@ var PLATFORM_FIREFOXOS = 5;
 var PLATFORM_CHROMEOS = 6;
 var PLATFORM_WINDOWS_8 = 7;
 var PLATFORM_BROWSER = 8;
-var giPlatform = PLATFORM_FIREFOXOS; // default platform
+var giPlatform = PLATFORM_ANDROID; // default platform
 
 var B_ON_DEVICE = true;
 

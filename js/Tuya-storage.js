@@ -260,42 +260,40 @@ function createBMP( oData )
 function file_viewer_load() 
 {
     disableSideMenu();
-    
+
     controller = document.getElementById( ID_FILE_SELECTOR );
 
     var reader = new FileReader();
     reader.readAsDataURL( getFile( controller ) );
     
-    reader.onloadend =function(event) {
+    reader.onloadend = function(event) {
         
         gsTempFileData = event.target.result;
-        //var decode = atob(filedata);
-        //var decodedData = atob(filedata);
-        //var en = btoa( "Hello World!" );
-        
-        
+
         //alert( beginIndex + "-" + encode.length + " : " + encode.substring( beginIndex + 1, beginIndex + 20 ) );
         
         // ask user if there exists any drawing record
         if ( gPenHistory.length > MIN_LENGTH_OF_PEN_HISTORY )
         {
             var sMessage = S_FILE_LOAD_MESSAGE[giLanguageIndex];
-            showConfirmMessage( sMessage, loadFile );
+            showConfirmMessage( sMessage, loadImageToCanvas );
         }
         else
         {
-            loadFile();
+            loadImageToCanvas();
         }
     }
 }
 
-function loadFile()
+function loadImageToCanvas()
 {
     offMessage();
 
     var encode = gsTempFileData.toString();
-    //alert( encode.substring(0, 30) );
-    var beginIndex = getPenHistoryBeginIndex( encode ); // BMP最後面都補"/" .
+    //var beginIndex = encode.indexOf( "base64," );
+    //encode = "data:image/jpeg;" + encode.substring( beginIndex, encode.length );
+
+    var beginIndex = getPenHistoryBeginIndex( encode );
     
     initFileSize();
 
@@ -318,7 +316,7 @@ function loadFile()
         
             if ( asTemp.length > iImageIndex )
             {
-                alert( asTemp[iImageIndex] );
+                //alert( asTemp[iImageIndex] );
                 parseImageData( asTemp[iImageIndex] );
             }
             
@@ -348,12 +346,11 @@ function loadFile()
     }
     catch(err) {
         //showMessage( S_OPEN_FILE_FAIL_MESSAGE[giLanguageIndex] + "<br>" + err.message );
-        
         loadImage( gsTempFileData, "", 1, true, gbDynamicFitSize ); 
     }
 }
 
-function openImage() 
+function openImageStuff() 
 {
     var controller = document.getElementById( ID_IMG_FILE_SELECTOR );
     
@@ -395,42 +392,48 @@ function loadImage( imageData, sImageName, fRatio, bNeedShow, bFitFileSize )
     var imageObj = new Image();
 
     imageObj.onload = function() {
-
-        var iCenterX = this.width / 2;
-        var iCenterY = this.height / 2;
-        
-        if ( bFitFileSize )
-        {
-            var fRatio1 = gCanvas.width / this.width;
-            var fRatio2 = gCanvas.height / this.height;
-            
-            fRatio = fRatio1 < fRatio2 ? fRatio1 : fRatio2;
-           
-            iCenterX = gCanvas.width / 2;
-            iCenterY = gCanvas.height / 2;
-        }
-        
-        //var widthRatio = this.width / 2 / gCanvas.width;
-        //var heightRatio = this.height / 2 / gCanvas.height;
-        var widthRatio = fRatio;
-        var heightRatio = fRatio;
-        
-        //var iWidth = gCanvas.width > this.width ? 
-
-        setImageData( imageData, sImageName, widthRatio, heightRatio );
-
-        if ( bNeedShow )
-        {
-            showOpenImage( iCenterX, iCenterY );
-            
-            //drawImage( gImageNowCount - 1, iCenterX, iCenterY, widthRatio, heightRatio );
-        }
-        else
-        {
-            clickPenStyleImage(); // open a image
-        }
+        onloadImage( imageData, sImageName, this.width, this.height, bFitFileSize, bNeedShow );
     };
-    imageObj.src = imageData;  
+    
+    imageObj.src = imageData;
+    
+    // TODO: some Android devices exist the issue that on-load event is not fired...
+}
+
+function onloadImage( imageData, sImageName, iWidth, iHeight, bFitFileSize, bNeedShow )
+{
+    var iCenterX = iWidth / 2;
+    var iCenterY = iHeight / 2;
+    var fRatio = 1;
+
+    if ( bFitFileSize )
+    {        
+        var fRatio1 = gCanvas.width / iWidth;
+        var fRatio2 = gCanvas.height / iHeight;
+        fRatio = fRatio1 < fRatio2 ? fRatio1 : fRatio2;
+       
+        iCenterX = gCanvas.width / 2;
+        iCenterY = gCanvas.height / 2;
+    }
+    
+    //var widthRatio = this.width / 2 / gCanvas.width;
+    //var heightRatio = this.height / 2 / gCanvas.height;
+    var widthRatio = fRatio;
+    var heightRatio = fRatio;
+    
+    //var iWidth = gCanvas.width > this.width ? 
+
+    setImageData( imageData, sImageName, widthRatio, heightRatio );
+
+    if ( bNeedShow )
+    {
+        showOpenImage( iCenterX, iCenterY );
+        //drawImage( gImageNowCount - 1, iCenterX, iCenterY, widthRatio, heightRatio );   
+    }
+    else
+    {
+        clickPenStyleImage(); // open a image
+    }    
 }
 
 
@@ -508,25 +511,27 @@ function showFilePickerToSave( iImageType )
 
 
 
-function saveImageFileOnDevice( iImageType )
+function saveImageFileByPlugin( iImageType )
 {
     if ( typeof window.canvas2ImagePlugin != 'undefined' )
     {
         window.canvas2ImagePlugin.saveImageDataToLibrary(
-            function(msg){
-                console.log(msg);
+            function( msg ) {
+                console.log( msg );
+                showMessage( S_SUCCESS[giLanguageIndex] + ": " + getImageFileName( iImageType ) );
             },
-            function(err){
-                console.log(err);
+            function( err ) {
+                console.log( err );
+                showMessage( "FAIL: " + err.stack );
             },
-            ( iImageType == IMAGE_TYPE_BMP ? gsBmpData : gsPngData )
+            ( iImageType == IMAGE_TYPE_BMP ? gsBmpData : gsPngData ),
+            getImageFileName( iImageType )
         );
     }
 }
 
 
-
-function saveImageFileOnDevice2( iImageType )
+function saveImageFileByPlugin2( iImageType )
 {
     window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(dir) {
         console.log("got main dir",dir);
@@ -593,7 +598,7 @@ function saveImageOnFirefoxOS( iImageType )
     } 
     catch(err)
     {
-        alert( "ErrorStack: " + err.stack  );
+        alert( "ErrorStack: " + err.stack );
     }
  }
 
