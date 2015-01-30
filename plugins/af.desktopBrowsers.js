@@ -44,7 +44,8 @@
             var elem = originalEvent.target;
             while (elem !== null) {
                 if (elem.hasAttribute("on" + type)) {
-                    eval(elem.getAttribute("on" + type));
+                    //eval(elem.getAttribute("on" + type));
+                    alert( "EVAL2:" + elem.getAttribute("on" + type) );
                 }
                 elem = elem.parentElement;
             }
