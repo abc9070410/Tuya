@@ -80,29 +80,11 @@ function changeHash( sPageID )
     
     gsNowDivID = sPageID;
 
-    //log( "changeHash: " + sPageID );
-
-    var eDiv = document.getElementById( sPageID );
-    
-    // disable the sort option
-    if ( isListID( gsLastDivID ) && !isListID( sPageID ) && sPageID.indexOf( ID_ITEM ) != 0 )
-    {
-        if ( navSupported() )
-        {
-            updateDiv( ID_HEADER, getHTMLOfHeaderDiv() );
-            updateDiv( getNavID(), getHTMLOfNavDiv() );
-        }
-
-        //updateDiv( getNavID(), getHTMLOfNavbarsDiv() );
-        gMergeListsList = null; // clean the result
-
-        log( "set nav & header to back to normal" );
-    }
+    log( "changeHash: " + sPageID );
     
     updateDiv( ID_HEADER, getHTMLOfHeaderDiv() );
     updateDiv( getNavID(), getHTMLOfNavDiv() );
     //updateDiv( ID_NAVBAR, getHTMLOfNavbarDiv() );
-    
     
     gbFooterShowed = false; // default enable the footer if page is changed
     gbHeaderShowed = true; // default enable the footer if page is changed
@@ -113,8 +95,8 @@ function changeHash( sPageID )
 
     if ( sPageID === ID_MENU )
     {
+        gbOnFullScreenMenu = true;
         clickMenu();
-        //updateDiv( sPageID, getHTMLOfNavDiv() );
     }
     else if ( sPageID === ID_MAIN )
     {
@@ -159,7 +141,6 @@ function changeHash( sPageID )
     else if ( isPaintPageID( sPageID ) )
     {
         initPaintPage( sPageID );
-        //window.open( window.location.href, '_self', 'location=yes' );
     }
     // -------------------------------
     
@@ -249,9 +230,6 @@ function initUI()
         string += getEmptyDiv( ID_MAIN, S_APP_NAME[giLanguageIndex] );
         string += getPrefixDiv( ID_LANGUAGE, "" );
         string += getHTMLOfLanguageDiv();
-        
-        //changeHash( ID_LANGUAGE );
-        //updateHash( ID_LANGUAGE );
     }
     string += "</div>";
     string += "</div>";
@@ -361,7 +339,15 @@ function getHTMLOfListLinkItem( sClass, sHref, sID, sText )
         {
             if ( notSupportExternalIcon() )
             {
-                return "<ul class='list' style='font-size:" + getFontRatio() + "%' ><li><div id='" + sID + "' data-transition='" + gsTransition + "' >" + getIcon( sID ) + sText + "</div></li></ul>";
+                // go to the href and do the ID event
+                if ( !navSupported() && needGoPaintPageThenDo( sID ) )
+                {
+                    return "<ul class='list' style='font-size:" + getFontRatio() + "%' ><li><a href='#" + getPaintPageID() + "' id='" + sID + "' data-transition='" + gsTransition + "' >" + getIcon( sID ) + sText + "</a></li></ul>";
+                }
+                else
+                {
+                    return "<ul class='list' style='font-size:" + getFontRatio() + "%' ><li><div id='" + sID + "' data-transition='" + gsTransition + "' >" + getIcon( sID ) + sText + "</div></li></ul>";
+                }
             }
             else
             {
@@ -392,7 +378,15 @@ function getHTMLOfListLinkItemWithImage( sClass, sHref, sID, sText, sImage )
     {
         if ( notSupportDefaultIcon() )
         {
-            return "<ul class='list' style='font-size:" + getFontRatio() + "%' ><li><img class='" + sClass + "' id='" + sID + "' data-transition='" + gsTransition + "' style='max-width:100px;max-height:100px;' src='" + sImage + "' >" + sText + "</img></li></ul>";
+            // go to the href and do the ID event
+            if ( !navSupported() && needGoPaintPageThenDo( sID ) )
+            {
+                return "<ul class='list' style='font-size:" + getFontRatio() + "%' ><li><a href='#" + getPaintPageID() + "'><img class='" + sClass + "' id='" + sID + "' data-transition='" + gsTransition + "' style='max-width:100px;max-height:100px;' src='" + sImage + "' >" + sText + "</a></img></li></ul>";
+            }
+            else
+            {
+                return "<ul class='list' style='font-size:" + getFontRatio() + "%' ><li><img class='" + sClass + "' id='" + sID + "' data-transition='" + gsTransition + "' style='max-width:100px;max-height:100px;' src='" + sImage + "' >" + sText + "</img></li></ul>";
+            }
         }
         else
         {
@@ -682,6 +676,11 @@ function getHTMLOfNavPaintDiv()
 {
     var string = "";
     
+    if ( !navSupported() )
+    {
+        string += getHTMLOfGoBackToCanvas();
+    }
+    
     string += getHTMLOfListLinkItem( "icon loading", "javascript:clickPenRecordSideMenu();", ID_CLICK_PEN_RECORD_SIDE_MENU, S_RECORD[giLanguageIndex] );
     string += getHTMLOfListLinkItem( "icon basket", "javascript:clickPenStyleSideMenu();", ID_CLICK_PEN_STYLE_SIDE_MENU, S_STYLE[giLanguageIndex] );
     string += getHTMLOfListLinkItem( "icon picture", "javascript:clickColorSideMenu();", ID_CLICK_COLOR_SIDE_MENU, S_COLOR[giLanguageIndex] );
@@ -734,8 +733,6 @@ function getHTMLOfNavPenRecordDiv()
     string += getHTMLOfListText( "", sText );
     string += getHTMLOfListLinkItem( "icon refresh", "javascript:clickUndo();", ID_CLICK_UNDO, S_UNDO[giLanguageIndex] );
     string += getHTMLOfListLinkItem( "icon stack", "javascript:clickRedo();", ID_CLICK_REDO, S_REDO[giLanguageIndex] );
-    
-    
 
     return string;
 }
@@ -786,16 +783,21 @@ function getHTMLOfNavPenStyleDiv()
 function getHTMLOfNavPenStyleDemoDiv( iPenStyle )
 {
     //saveGlobal();
-    abortPlay( false );
 
     var string = "";
     
     string += getHTMLOfGoBackToPenStyle();
     
-    //string += getHTMLOfNewLine( 1 );
-    //string += "<div style='text-align:center'>" + "<div style='font-size:" + ( 100 + getPenWidth() * 4 ) + "%; margin: 0px auto;'>" + "●" + "</div></div>";
-    string += getHTMLOfCanvas();
-    //string += getHTMLOfNewLine( 1 );
+    //if ( navSupported() ) // TODO: remove this after fix the demo problem on Windows Phone 8.1 
+    {
+        abortPlay( false );
+    
+        //string += getHTMLOfNewLine( 1 );
+        //string += "<div style='text-align:center'>" + "<div style='font-size:" + ( 100 + getPenWidth() * 4 ) + "%; margin: 0px auto;'>" + "●" + "</div></div>";
+        string += getHTMLOfCanvas();
+        //string += getHTMLOfNewLine( 1 );
+    }
+    
     
     if ( iPenStyle == TYPE_TEXT )
     {
@@ -825,10 +827,16 @@ function getHTMLOfNavPenStyleImageDiv()
     
     string += getHTMLOfGoBackToPenStyle();
     
-    var sText = S_OPEN[giLanguageIndex] + "<br><br><input id='" + ID_IMG_FILE_SELECTOR + "' type='file' value='IMG' ";
-    sText += notSupportJsLink() ? "/>" : "onchange='openImageStuff();'/>";
-
-    string += getHTMLOfListText( "icon folder", sText );
+    if ( giPlatform == PLATFORM_WP ) // do not support HTML5 file upload
+    {
+        string += getHTMLOfListLinkItem( "icon new", "javascript:clickImgStuffFilePicker();", ID_CLICK_IMG_STUFF_FILE_PICKER, S_OPEN[giLanguageIndex] );
+    }
+    else
+    {
+        var sText = S_OPEN[giLanguageIndex] + "<br><br><input id='" + ID_IMG_STUFF_FILE_SELECTOR + "' type='file' value='IMG' ";
+        sText += notSupportJsLink() ? "/>" : "onchange='openImageStuff();'/>";
+        string += getHTMLOfListText( "icon folder", sText );
+    }
     
     for ( var i = 0; i < gImageNowCount; i ++ )
     {
@@ -918,7 +926,6 @@ function getHTMLOfNavFileDiv()
     {
         gsFileName = getDefaultImageFileName();
     }
-    
 
     string += getHTMLOfGoBack();
     string += getHTMLOfListLinkItem( "icon new", "javascript:clickNewFile();", ID_CLICK_NEW_FILE, S_NEW[giLanguageIndex] );
@@ -927,10 +934,17 @@ function getHTMLOfNavFileDiv()
     
     string += getHTMLOfListLinkDownloadItem( IMAGE_TYPE_PNG, "icon picture", S_SAVE_DRAWING[giLanguageIndex] );
     string += getHTMLOfListLinkDownloadItem( IMAGE_TYPE_BMP, "icon camera", S_SAVE_ANIMATION[giLanguageIndex] );
-
-    var sText = S_OPEN[giLanguageIndex] + "<br><br><input id='" + ID_FILE_SELECTOR + "' type='file' value='IMG' ";
-    sText += notSupportJsLink() ? "/>" : "onchange='file_viewer_load();'/>";
-    string += getHTMLOfListText( "icon folder", sText );
+    
+    if ( giPlatform == PLATFORM_WP ) // do not support HTML5 file upload
+    {
+        string += getHTMLOfListLinkItem( "icon new", "javascript:clickImgFilePicker();", ID_CLICK_IMG_FILE_PICKER, S_OPEN[giLanguageIndex] );
+    }
+    else
+    {
+        var sText = S_OPEN[giLanguageIndex] + "<br><br><input id='" + ID_IMG_FILE_SELECTOR + "' type='file' value='IMG' ";
+        sText += notSupportJsLink() ? "/>" : "onchange='file_viewer_load();'/>";
+        string += getHTMLOfListText( "icon folder", sText );
+    }
 
     return string;
 }
@@ -1432,6 +1446,40 @@ function isDarkThemeNow()
 function getNavID()
 {
     return navSupported() ? ID_NAV : ID_MENU;
+}
+
+function isGoBackText( sText )
+{
+    return sText.indexOf( S_GO_BACK[giLanguageIndex] ) >= 0 ||
+           sText.indexOf( S_GO_BACK_TO[giLanguageIndex] ) >= 0;
+}
+
+function needGoPaintPageThenDo( sID )
+{
+    var i;
+    var asID = new Array( 
+        ID_CLICK_UNDO, ID_CLICK_PLAY, ID_CLICK_CLEAN, ID_CLICK_PLAY_STYLE_OBVERSE, ID_CLICK_PLAY_STYLE_REVERSE, ID_CLICK_CUT_PEN_HISTORY, ID_CLICK_NEW_FILE, ID_CLICK_REDO, ID_CLICK_DELAY, ID_CLICK_IMG_FILE_PICKER );
+        
+    for ( i = 0; i < asID.length; i ++ )
+    {
+        if ( sID == asID[i] )
+        {
+            return true;
+        }
+    }
+    
+    var asIDs = new Array( 
+        ID_CLICK_PEN_STYLE_PICTURE, ID_CLICK_PEN_STYLE_SPECIFIC_STYLE );
+        
+    for ( i = 0; i < asID.length; i ++ )
+    {
+        if ( sID.indexOf( asIDs[i] ) >= 0 )
+        {
+            return true;
+        }
+    }
+    
+    return false;
 }
 
 // --------------

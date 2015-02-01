@@ -489,6 +489,18 @@ function enableFooter()
     }
 }
 
+function clickImgFilePicker()
+{   
+    giOpenImageType = IMAGE_TO_CANVAS;
+    pickSinglePhoto();
+}
+
+function clickImgStuffFilePicker()
+{
+    giOpenImageType = IMAGE_TO_STUFF;
+    pickSinglePhoto();
+}
+
 function clickRelatedLink( iClickIndex )
 {
 
@@ -861,7 +873,21 @@ function enableSideMenu()
 function disableSideMenu()
 {
     if ( navSupported() )
+    {
         $.ui.toggleSideMenu( false ); // always call this function by menu
+    }
+    else
+    {
+        //window.location.hash = "#" + getPaintPageID();
+        //updateHash( getPaintPageID() );
+        //changeHash( getPaintPageID() );
+        //updateDiv( getNavID(), getHTMLOfPaintDiv() );
+        if ( gbOnFullScreenMenu )
+        {
+            //gbOnFullScreenMenu = false;
+            //initPaintPage( getNavID() );
+        }
+    }
 }
 
 
@@ -1314,7 +1340,7 @@ function clickFileSideMenu()
 
     if ( notSupportJsLink() )
     {
-        if ( e = document.getElementById( ID_FILE_SELECTOR ) )
+        if ( e = document.getElementById( ID_IMG_FILE_SELECTOR ) )
         {
             e.removeEventListener( "change", file_viewer_load, false );
         }
@@ -1334,7 +1360,7 @@ function clickFileSideMenu()
 
     if ( notSupportJsLink() )
     {
-        if ( e = document.getElementById( ID_FILE_SELECTOR ) )
+        if ( e = document.getElementById( ID_IMG_FILE_SELECTOR ) )
         {
             e.addEventListener( "change", file_viewer_load, false );
         }
@@ -1443,7 +1469,14 @@ function clickSaveDrawingFile()
 
     if ( typeof Windows != 'undefined' ) // for Win 8 APP only
     {
-        showFilePickerToSave( IMAGE_TYPE_PNG );
+        if ( giPlatform == PLATFORM_WP )
+        {
+            saveImageInWindowsPhone81( IMAGE_TYPE_PNG );
+        }
+        else
+        {
+            saveImageInWindows8( IMAGE_TYPE_PNG );
+        }
     }
     else if ( window.navigator.msSaveBlob ) // for IE only
     {
@@ -1476,7 +1509,14 @@ function clickSaveAnimationFile()
     {
         if ( typeof Windows != 'undefined' ) // for Win 8 APP only
         {
-            showFilePickerToSave( IMAGE_TYPE_BMP );
+            if ( giPlatform == PLATFORM_WP )
+            {
+                saveImageInWindowsPhone81( IMAGE_TYPE_BMP );
+            }
+            else
+            {
+                saveImageInWindows8( IMAGE_TYPE_BMP );
+            }
         }
         /*
         else if ( typeof chrome !== 'undefined' )
@@ -1709,6 +1749,7 @@ function clickPenStyleLine()
 function showDemoPage( iPenStyle )
 {
     log( "-showDemoPage:" + iPenStyle );
+    
     updateDiv( getNavID(), getHTMLOfNavPenStyleDemoDiv( iPenStyle ) );
     playDemo( iPenStyle );
 }
@@ -1853,7 +1894,7 @@ function clickPenStyleImage()
 
     if ( notSupportJsLink() )
     {
-        if ( e = document.getElementById( ID_IMG_FILE_SELECTOR ) )
+        if ( e = document.getElementById( ID_IMG_STUFF_FILE_SELECTOR ) )
         {
             e.removeEventListener( "change", openImageStuff, false );
         }
@@ -1864,7 +1905,7 @@ function clickPenStyleImage()
 
     if ( notSupportJsLink() )
     {
-        if ( e = document.getElementById( ID_IMG_FILE_SELECTOR ) )
+        if ( e = document.getElementById( ID_IMG_STUFF_FILE_SELECTOR ) )
         {
             e.addEventListener( "change", openImageStuff, false );
         }
@@ -2348,6 +2389,11 @@ function playLogo( iLogoIndex )
 
 function playDemo( iPenStyle )
 {
+    if ( !navSupported() )
+    {
+        return; // TODO: remove this after fix the demo problem on Windows Phone 8.1 
+    }
+
     initCanvas( getSideMenuWidth(), getSideMenuWidth() );
     cleanCanvas( CLEAN_STYLE_NORMAL );
     

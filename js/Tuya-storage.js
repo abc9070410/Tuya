@@ -260,11 +260,21 @@ function createBMP( oData )
 function file_viewer_load() 
 {
     disableSideMenu();
-
-    controller = document.getElementById( ID_FILE_SELECTOR );
+        
+    var imageFile;
+    
+    if ( giPlatform == PLATFORM_WP )
+    {
+        imageFile = gOpenImageFile;
+    }
+    else
+    {
+        controller = document.getElementById( ID_IMG_FILE_SELECTOR );
+        imageFile = getFile( controller );
+    }
 
     var reader = new FileReader();
-    reader.readAsDataURL( getFile( controller ) );
+    reader.readAsDataURL( imageFile );
     
     reader.onloadend = function(event) {
         
@@ -352,9 +362,19 @@ function loadImageToCanvas()
 
 function openImageStuff() 
 {
-    var controller = document.getElementById( ID_IMG_FILE_SELECTOR );
+    var controller = document.getElementById( ID_IMG_STUFF_FILE_SELECTOR );
+    var imageFile;
     
-    loadImageFile( getFile( controller ), false, false );
+    if ( giPlatform == PLATFORM_WP )
+    {
+        imageFile = gOpenImageFile;
+    }
+    else
+    {
+        imageFile = getFile( controller );
+    }
+    
+    loadImageFile( imageFile, false, false );
 }
 
 function getFile( controller )
@@ -382,8 +402,9 @@ function loadImageFile( file, needShow, needRecord )
 
     reader.onloadend =function(event) {
         var imageData = event.target.result;
+        var fRatio = giPlatform == PLATFORM_WP ? 0.2 :0.5;
                 
-        loadImage( imageData, sImageName, 0.5, needShow, false );
+        loadImage( imageData, sImageName, fRatio, needShow, false );
     }   
 }
 
@@ -392,7 +413,7 @@ function loadImage( imageData, sImageName, fRatio, bNeedShow, bFitFileSize )
     var imageObj = new Image();
 
     imageObj.onload = function() {
-        onloadImage( imageData, sImageName, this.width, this.height, bFitFileSize, bNeedShow );
+        onloadImage( imageData, sImageName, this.width * fRatio, this.height * fRatio, bNeedShow, bFitFileSize );
     };
     
     imageObj.src = imageData;
@@ -400,7 +421,7 @@ function loadImage( imageData, sImageName, fRatio, bNeedShow, bFitFileSize )
     // TODO: some Android devices exist the issue that on-load event is not fired...
 }
 
-function onloadImage( imageData, sImageName, iWidth, iHeight, bFitFileSize, bNeedShow )
+function onloadImage( imageData, sImageName, iWidth, iHeight, bNeedShow, bFitFileSize )
 {
     var iCenterX = iWidth / 2;
     var iCenterY = iHeight / 2;
@@ -468,7 +489,7 @@ function getImageBlob( iImageType )
     return iImageType == IMAGE_TYPE_BMP ? b64toBlob( gsBmpData, "image/bmp" ) : b64toBlob( gsPngData, "image/png" );
 }
 
-function showFilePickerToSave( iImageType )
+function saveImageInWindows8( iImageType )
 {
     var sExtension = iImageType == IMAGE_TYPE_BMP ? ".bmp" : ".png";
     var sImageDescription = iImageType == IMAGE_TYPE_BMP ? "BMP files" : "PNG files";
@@ -594,12 +615,100 @@ function saveImageOnFirefoxOS( iImageType )
         // An error could occur if a file with the same name already exist
         request.onerror = function () {
             alert( "SAVE FAIL: " + this.error.name );
-        }
+       }
     } 
     catch(err)
     {
-        alert( "ErrorStack: " + err.stack );
+       alert( "ErrorStack: " + err.stack );
     }
- }
+}
 
+// ----------- Windows Phone 8.1 ----------------
 
+//document.addEventListener( "activated", activatedOpenImageFile, false );
+
+function pickSinglePhoto() 
+{
+    // Clean scenario output
+    WinJS.log && WinJS.log("", "sample", "status");
+
+    // Create the picker object and set options
+    var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
+    openPicker.viewMode = Windows.Storage.Pickers.PickerViewMode.thumbnail;
+    openPicker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.picturesLibrary;
+    // Users expect to have a filtered view of their folders depending on the scenario.
+    // For example, when choosing a documents folder, restrict the filetypes to documents for your application.
+    openPicker.fileTypeFilter.replaceAll([".png", ".jpg", ".jpeg", ".bmp" ]);
+
+    // Open the picker for the user to pick a file
+    openPicker.pickSingleFileAndContinue();
+}
+
+// Called when app is activated from file open picker
+// eventObject contains the returned files picked by user
+function continueFileOpenPicker(eventObject) {
+    var files = eventObject[0].files;
+    var filePicked = files.size > 0 ? files[0] : null;
+    
+    if (filePicked !== null) {
+        // Application now has read/write access to the picked file
+        WinJS.log && WinJS.log("Picked photo: " + filePicked.name, "sample", "status");
+        
+        gOpenImageFile = filePicked;
+        
+        if ( giOpenImageType == IMAGE_TO_CANVAS )
+        {
+            file_viewer_load();
+        }
+        else
+        {
+            openImageStuff();
+        }
+    } else {
+        // The picker was dismissed with no selected file
+        WinJS.log && WinJS.log("Operation cancelled.", "sample", "status");
+    }
+}
+
+function saveImageInWindowsPhone81( iImageType )
+{
+    var sExtension = iImageType == IMAGE_TYPE_BMP ? ".bmp" : ".png";
+    var sImageDescription = iImageType == IMAGE_TYPE_BMP ? "BMP files" : "PNG files";
+    
+    // Create the picker object and set options
+    var savePicker = new Windows.Storage.Pickers.FileSavePicker();
+    savePicker.suggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.picturesLibrary
+    // Dropdown of file types the user can save the file as
+    savePicker.fileTypeChoices.insert( sImageDescription, [sExtension] );
+    // Default file name if the user does not type one in or select a file to replace
+    savePicker.suggestedFileName = getImageFileName( iImageType );
+
+    savePicker.pickSaveFileAndContinue()    
+}
+
+function continueFileSavePicker(file) {
+    var iImageType = file.name.indexOf( "bmp" ) > 0 ? IMAGE_TYPE_BMP : IMAGE_TYPE_PNG;
+    var blob = getImageBlob( iImageType );
+
+    if (file !== null) {
+        // Open the returned file in order to copy the data
+        file.openAsync(Windows.Storage.FileAccessMode.readWrite).then(function (output) {
+            // Get the IInputStream stream from the blob object
+            var input = blob.msDetachStream();
+
+            // Copy the stream from the blob to the File stream
+            Windows.Storage.Streams.RandomAccessStream.copyAsync(input, output).then(function () {
+                output.flushAsync().done(function () {
+                    input.close();
+                    output.close();
+                    WinJS.log && WinJS.log("File '" + file.name + "' saved successfully to the Pictures Library!", "sample", "status");
+                    
+                    showMessage( S_SUCCESS[giLanguageIndex] + " : " + file.name );
+                });
+            });
+        });
+
+    } else {
+        WinJS.log && WinJS.log("Operation cancelled.", "sample", "status");
+    }
+}
