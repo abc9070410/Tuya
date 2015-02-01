@@ -171,6 +171,10 @@ function getRelatedUrlByIndex( index )
     {
         return "http://apps.microsoft.com/windows/en-us/app/tuya/19b2056a-6c93-4f89-8844-d583b9963331";
     }
+    else if ( S_RELATED_LINKS_ARRAY[index].toString() === S_WINDOWS_PHONE_STORE.toString() )
+    {
+        return "http://www.windowsphone.com/en-us/store/app/tuya/379609c0-e983-46f5-bc45-c7977fa80fce";
+    }
     else if ( S_RELATED_LINKS_ARRAY[index].toString() === S_CHROME_WEB_STORE.toString() )
     {
         return "https://chrome.google.com/webstore/detail/tuya/mpgcknahnhkphbjahkhpkdpgaipolkgb?utm_source=chrome-ntp-icon";

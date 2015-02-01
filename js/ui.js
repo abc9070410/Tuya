@@ -1003,7 +1003,7 @@ function getHTMLOfAppDiv()
     
     string += getHTMLOfCanvas(); 
 
-    for ( var i = 0; i < 4/*S_RELATED_LINKS_ARRAY.length*/; i ++ )
+    for ( var i = 0; i < 5/*S_RELATED_LINKS_ARRAY.length*/; i ++ )
     {
         string += getHTMLOfListLinkItem( "icon info", "javascript:goRelatedLinkURL(" + i + ");", ID_CLICK_RELATED_LINK + i, S_RELATED_LINKS_ARRAY[i][giLanguageIndex] );
     }
