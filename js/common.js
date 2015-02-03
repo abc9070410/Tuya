@@ -165,7 +165,7 @@ function getRelatedUrlByIndex( index )
 {
     if ( S_RELATED_LINKS_ARRAY[index].toString() === S_GOOGLE_PLAY.toString() )
     {
-        return "https://play.google.com/store/apps/details?id=sk.phonegap.timetable";
+        return "https://play.google.com/store/apps/details?id=org.sk.tuya";
     }
     else if ( S_RELATED_LINKS_ARRAY[index].toString() === S_WINDOWS_STORE.toString() )
     {
