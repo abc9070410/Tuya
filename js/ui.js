@@ -539,7 +539,9 @@ function getHTMLOfHeaderDiv()
 
             if ( navSupported() )
             {
-                string += getHTMLOfHeaderIconItem( "button icon pencil", "javascript:clickMenu();", ID_CLICK_MENU, "" );
+                var sText = hardToClickMenu() ? S_MENU[giLanguageIndex] : "";
+            
+                string += getHTMLOfHeaderIconItem( "button icon pencil", "javascript:clickMenu();", ID_CLICK_MENU, sText );
             }
             else
             {
@@ -772,8 +774,9 @@ function getHTMLOfNavPenStyleDiv()
     string += getHTMLOfListLinkItem( "icon loading", "javascript:clickPenStyleDot();", ID_CLICK_PEN_STYLE_DOT, S_DOT[giLanguageIndex] );
     string += getHTMLOfListLinkItem( "icon trash", "javascript:clickPenStyleEraser();", ID_CLICK_PEN_STYLE_ERASER, S_ERASER[giLanguageIndex] );
     string += getHTMLOfListLinkItem( "icon message", "javascript:clickPenStyleText();", ID_CLICK_PEN_STYLE_TEXT, S_TEXT[giLanguageIndex] );
-    string += getHTMLOfListLinkItem( "icon message", "javascript:clickPenStyleOther();", ID_CLICK_PEN_STYLE_OTHER, S_OTHER[giLanguageIndex] );
     string += getHTMLOfListLinkItem( "icon picture", "javascript:clickPenStyleImage();", ID_CLICK_PEN_STYLE_IMAGE, S_PICTURE[giLanguageIndex] );
+    string += getHTMLOfListLinkItem( "icon message", "javascript:clickPenStyleOther();", ID_CLICK_PEN_STYLE_OTHER, S_OTHER[giLanguageIndex] );
+    
     
     //string += getHTMLOfListLinkItem( "icon picture", "javascript:clickPenStylePicture();", ID_CLICK_PEN_STYLE_PICTURE, S_PICTURE[giLanguageIndex] );
 
@@ -826,6 +829,11 @@ function getHTMLOfNavPenStyleImageDiv()
     var string = "";
     
     string += getHTMLOfGoBackToPenStyle();
+    
+    string += getHTMLOfListLinkItem( "icon add", "javascript:clickPenStyleDemoIncrease(" + TYPE_IMAGE + ");", ID_CLICK_PEN_STYLE_DEMO_INCREASE, S_INCREASE[giLanguageIndex] + " : " + getSpecificWidth( TYPE_IMAGE ) );
+    string += getHTMLOfListLinkItem( "icon remove", "javascript:clickPenStyleDemoDecrease(" + TYPE_IMAGE + ");", ID_CLICK_PEN_STYLE_DEMO_DECREASE, S_DECREASE[giLanguageIndex] );
+    
+    log( "now image ratio: " + getSpecificWidth( TYPE_IMAGE ) );
     
     if ( giPlatform == PLATFORM_WP ) // do not support HTML5 file upload
     {
@@ -1003,7 +1011,7 @@ function getHTMLOfAppDiv()
     
     string += getHTMLOfCanvas(); 
 
-    for ( var i = 0; i < 5/*S_RELATED_LINKS_ARRAY.length*/; i ++ )
+    for ( var i = 0; i < 6/*S_RELATED_LINKS_ARRAY.length*/; i ++ )
     {
         string += getHTMLOfListLinkItem( "icon info", "javascript:goRelatedLinkURL(" + i + ");", ID_CLICK_RELATED_LINK + i, S_RELATED_LINKS_ARRAY[i][giLanguageIndex] );
     }

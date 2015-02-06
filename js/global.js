@@ -33,7 +33,7 @@ var PLATFORM_FIREFOXOS = 5;
 var PLATFORM_CHROMEOS = 6;
 var PLATFORM_WINDOWS_8 = 7;
 var PLATFORM_BROWSER = 8;
-var giPlatform = PLATFORM_WP; // default platform
+var giPlatform = PLATFORM_BROWSER; // default platform
 
 var B_ON_DEVICE = true;
 
@@ -166,6 +166,7 @@ var KEY_RECTANGLE_WIDTH = "key_rectangle_width_";
 var KEY_CIRCLE_WIDTH = "key_circle_width_";
 var KEY_ERASER_WIDTH = "key_eraser_width_";
 var KEY_TEXT_WIDTH = "key_text_width_";
+var KEY_IMAGE_STUFF_RATIO = "key_iamge_stuff_ratio_";
 
 // color
 var KEY_FORE_COLOR = "key_fore_color_";
@@ -199,7 +200,7 @@ KEY_FORE_COLOR_INDEX, KEY_BACK_COLOR_INDEX,
 
 // size
 KEY_PEN_WIDTH, KEY_RECTANGLE_WIDTH, KEY_CIRCLE_WIDTH, 
-KEY_ERASER_WIDTH, KEY_TEXT_WIDTH, 
+KEY_ERASER_WIDTH, KEY_TEXT_WIDTH, KEY_IMAGE_STUFF_RATIO,
 
 // style
 KEY_ERASER_STYLE_INDEX, KEY_LINE_STYLE_INDEX, KEY_DOT_STYLE_INDEX, 

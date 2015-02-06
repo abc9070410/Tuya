@@ -348,6 +348,20 @@ function getEraserWidth()
     return ( iValue && !isNaN( iValue ) ) ? iValue : 50;
 }
 
+function setImageStuffRatio( iRatio )
+{
+    setItem( KEY_IMAGE_STUFF_RATIO, iRatio );
+}
+
+function getImageStuffRatio()
+{
+    var value = getItem( KEY_IMAGE_STUFF_RATIO );
+    
+    var iValue = parseInt( value, 10 );
+
+    return ( iValue && !isNaN( iValue ) ) ? iValue : 50;
+}
+
 function setTextWidth( iWidth )
 {
     setItem( KEY_TEXT_WIDTH, iWidth );

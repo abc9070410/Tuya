@@ -1635,6 +1635,10 @@ function getSpecificWidth( iPenStyle )
     {
         return getEraserWidth();
     }
+    else if ( iPenStyle == TYPE_IMAGE )
+    {
+        return getImageStuffRatio();
+    }
     else
     {
         return null;
@@ -1663,6 +1667,10 @@ function setSpecificWidth( iPenStyle, iWidth )
     else if ( iPenStyle == TYPE_PEN_ERASER )
     {
         setEraserWidth( iWidth );
+    }
+    else if ( iPenStyle == TYPE_IMAGE )
+    {
+        return setImageStuffRatio( iWidth );
     }
 }
 
@@ -1754,8 +1762,15 @@ function showDemoPage( iPenStyle )
 {
     log( "-showDemoPage:" + iPenStyle );
     
-    updateDiv( getNavID(), getHTMLOfNavPenStyleDemoDiv( iPenStyle ) );
-    playDemo( iPenStyle );
+    if ( iPenStyle == TYPE_IMAGE )
+    {
+        updateDiv( getNavID(), getHTMLOfNavPenStyleImageDiv() );
+    }
+    else
+    {
+        updateDiv( getNavID(), getHTMLOfNavPenStyleDemoDiv( iPenStyle ) );
+        playDemo( iPenStyle );
+    }
 }
 
 
@@ -2899,6 +2914,11 @@ function notSupportDefaultIcon()
 function notSupportExternalIcon()
 {
     return true;
+}
+
+function hardToClickMenu()
+{
+    return giPlatform == PLATFORM_FIREFOXOS;
 }
 
 function supportCanvas2ImagePlugin()

@@ -41,6 +41,9 @@ function draw( phyX, phyY )
                 var iImageIndex = giImageTargetIndex;
                 var iWidthRatio = gImageWidthRatio[iImageIndex];
                 var iHeightRatio = gImageHeightRatio[iImageIndex];
+                
+                iWidthRatio *= getSpecificWidth( TYPE_IMAGE ) / 100;
+                iHeightRatio *= getSpecificWidth( TYPE_IMAGE ) / 100;
             
                 sSinglePenHistory = addQueueImage( iImageIndex, phyX, phyY, iWidthRatio, iHeightRatio );
             }
