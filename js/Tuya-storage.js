@@ -395,6 +395,19 @@ function getFile( controller )
 
 function loadImageFile( file, needShow, needRecord )
 {
+    log( "this image stuff size : " + file.size );
+    
+    var iFileSizeKB = parseInt( file.size / 1024, 10 );
+    
+    // not load the image if the the image size is too large
+    if ( iFileSizeKB > MAX_IMAGE_STUFF_KB )
+    {
+        var sText = S_FILE_SIZE_IS_TOO_LARGE[giLanguageIndex] + ": <br>" + iFileSizeKB + " KB > " + MAX_IMAGE_STUFF_KB + " KB";
+        
+        showMessage( sText );
+        return;
+    }
+
     var reader = new FileReader();
     reader.readAsDataURL( file );
     

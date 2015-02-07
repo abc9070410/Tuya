@@ -731,6 +731,10 @@ function issueNextQueue( iMode, iPlayNumber, iPlayStyle, iPenStyle, iBeginTouchO
             var iNextOrder = getNext( iPlayStyle, iTouchOrder );
             setTimeout( playPenHistoryAnimation( iPlayNumber, iPlayStyle, iBeginTouchOrder, iNextOrder ), getPlaySpeed() );
         }
+        else
+        {
+            storeNowDrawing(); // avoid taking the wrong screenshot when touch end
+        }
     }
 }
 

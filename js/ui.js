@@ -390,7 +390,7 @@ function getHTMLOfListLinkItemWithImage( sClass, sHref, sID, sText, sImage )
         }
         else
         {
-            return "<ul class='list' style='font-size:" + getFontRatio() + "%' ><li><img   style='max-width:100px;max-height:100px;' src='" + sImage + "' ><div class='" + sClass + "' id='" + sID + "' data-transition='" + gsTransition + "'>" + sText + "</div></img></li></ul>";
+            return "<ul class='list' style='font-size:" + getFontRatio() + "%' ><li><img style='max-width:100px;max-height:100px;' id='" + sID + "' src='" + sImage + "' ><div class='" + sClass + "' data-transition='" + gsTransition + "'>" + sText + "</div></img></li></ul>";
         }
     }
     else

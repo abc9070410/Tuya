@@ -253,18 +253,6 @@ function downloadImageFile( fileURL )
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 function addJS( sJsFile, bLocalFile )
 {
     var oHead = document.getElementsByTagName("head")[0];
@@ -1693,7 +1681,7 @@ function clickDelaySecondDecrease()
 
 function clickPenStyleDemoIncreaseDefault()
 {
-    clickPenStyleDemoIncrease( gPenStyle );
+    clickPenStyleDemoIncrease( getPenStyleBySideMenu() );
 }
 
 function clickPenStyleDemoIncrease( iPenStyle )
@@ -1709,9 +1697,14 @@ function clickPenStyleDemoIncrease( iPenStyle )
     showDemoPage( iPenStyle );
 }
 
+function getPenStyleBySideMenu()
+{
+    return giNowSideMenu == SIDEMENU_PEN_STYLE_IMAGE ? TYPE_IMAGE : gPenStyle;
+}
+
 function clickPenStyleDemoDecreaseDefault()
 {
-    clickPenStyleDemoDecrease( gPenStyle );
+    clickPenStyleDemoDecrease( getPenStyleBySideMenu() );
 }
 
 function clickPenStyleDemoDecrease( iPenStyle )
@@ -2941,7 +2934,6 @@ function getWidthPrecent( iIconType )
 
     return parseInt( iCoefficient * getScreenHeight() / getScreenWidth(), 10 );
 }
-
 
 
 

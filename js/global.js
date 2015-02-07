@@ -33,7 +33,7 @@ var PLATFORM_FIREFOXOS = 5;
 var PLATFORM_CHROMEOS = 6;
 var PLATFORM_WINDOWS_8 = 7;
 var PLATFORM_BROWSER = 8;
-var giPlatform = PLATFORM_BROWSER; // default platform
+var giPlatform = PLATFORM_CHROMEOS; // default platform
 
 var B_ON_DEVICE = true;
 
@@ -310,6 +310,8 @@ var MIN_LENGTH_OF_PEN_HISTORY = 50;
 
 var TYPE_ADD = 1;
 var TYPE_REMOVE = 2;
+
+var MAX_IMAGE_STUFF_KB = 1024; // max file size is 1024 KB
 
 // ------ flag -------
 

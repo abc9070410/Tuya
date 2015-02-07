@@ -112,6 +112,8 @@ var S_IMAGE_TYPE = new Array( '圖檔類別', 'Image Type', '图档类别', 'イ
 var S_IMAGE_SIZE = new Array( '圖檔大小', 'Image Size', '图档大小', '画像サイズ', '이미지 크기', 'Voltar para', 'Volver a', 'छवि का प्रकार', 'حجم الصورة', 'о', 'Taille de l`image', 'ขนาดภาพ', 'keine', 'Dimensione immagine' );
 var S_EMAIL_TO_AUTHOR = new Array( '寫信給作者', 'Email to Author', '写信给作者', '著者にメールで知らせる', '작성자에게 메일 보내기', 'Nome da Imagem', 'Nombre de la imagen', 'छवि का आकार', 'ارسل الى الكاتب', 'О APP', 'Envoyer à l`auteur', 'ส่งอีเมล์ไปยังผู้เขียน', 'Einstellung Fertig', 'Email di Autore' );
 
+var S_FILE_SIZE_IS_TOO_LARGE = new Array( '圖片檔案過大', 'The file size is too large', '图片档案过大', 'ファイルサイズが大きすぎる', '파일 크기가 너무 커서', 'O tamanho do arquivo é muito grande', 'El tamaño del archivo es demasiado grande', 'फ़ाइल का आकार बहुत बड़ा है', 'حجم الملف كبير جدا', 'Размер файла слишком велик', 'La taille du fichier est trop grande', 'ขนาดไฟล์มีขนาดใหญ่เกินไป', 'Die Dateigröße ist zu groß', 'La dimensione del file è troppo grande' );
+
 
 
 // ----------------------------------------------------
