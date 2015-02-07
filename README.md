@@ -10,20 +10,20 @@
 
 ## Platform
 
-support Windows 8.1, Windows Phone 8.1, Android, Firefox OS, Chrome OS and all the recent web browsers
+* support Windows 8.1, Windows Phone 8.1, Android, Firefox OS, Chrome OS and all the recent web browsers
 
 ## Language
 
-support fourteen langueages, including english, 中文, 日本の, 한국의, português, español, हिन्दी, العربية‎ , русский язык, le français , อักษรไทย, Deutsch, Italiano
+* support fourteen langueages, including english, 中文, 日本の, 한국의, português, español, हिन्दी, العربية‎ , русский язык, le français , อักษรไทย, Deutsch, Italiano
 
 ## Demo
 
-http://tinyurl.com/knxtpd8
+* http://tinyurl.com/knxtpd8
 
 ## External Library
 
-App Framework 2.1 
-https://github.com/01org/appframework
+* App Framework 2.1 
+* https://github.com/01org/appframework
 
 ## License
 
