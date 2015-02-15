@@ -527,7 +527,10 @@ function getHTMLOfHeaderDiv()
         {
         
         }
-        else if ( gsNowDivID == ID_OPTION )
+        // two case :
+        // 1. option page
+        // 2. show the image content after saving drawing in some browsers
+        else if ( gsNowDivID == ID_OPTION || gsNowDivID.indexOf( "ajax" ) >= 0 )
         {
             //string += "<a href='#" + getPaintPageID() + "' class='button icon paper' style='float:left'>" + S_GO_BACK_TO[giLanguageIndex] + S_CANVAS[giLanguageIndex] + "</a>";
             

@@ -178,8 +178,10 @@ function playPenHistory( iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder 
     }
     else
     {
+        var iSpeed = penMotions.length > 3 ? getPlaySpeed() : getPlaySpeed() * giTouchDelayCoefficient;
+        //alert( iTouchOrder + ":" + penMotions.length );
         var iNextOrder = getNext( iPlayStyle, iTouchOrder );
-        setTimeout( playPenHistoryAnimation( iPlayNumber, iPlayStyle, iBeginTouchOrder, iNextOrder ), getPlaySpeed() * penMotions.length + 1 );
+        setTimeout( playPenHistoryAnimation( iPlayNumber, iPlayStyle, iBeginTouchOrder, iNextOrder ), iSpeed * penMotions.length + 1 );
     }
 }
 

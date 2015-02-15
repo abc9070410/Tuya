@@ -59,7 +59,6 @@ function draw( phyX, phyY )
             {
                 sSinglePenHistory = addQueueRectangle( phyX, phyY, false, getRectangleStyle() );
             }
-
             issueDrawQueue( EDIT_MODE, giPlayNumber, giPlayStyle, gPenStyle, 0, 0 );
         }
         else
@@ -236,6 +235,14 @@ function addQueueRectangle( x, y, bIsEraser, iStyle )
     giDrawQueueCount++;
     
     return "" + TYPE_PEN_RECTANGLE + TOKEN_GAP + x + TOKEN_GAP + y + TOKEN_GAP + iStyle + MOTION_GAP;
+}
+
+function drawQueueRectangleAnimation( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder )
+{
+    return function()
+    {
+         drawQueueRectangle( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder )
+    }
 }
 
 function drawQueueRectangle( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder )
@@ -424,6 +431,14 @@ function addQueueCircle( x, y, bIsEraser, iStyle )
     return "" + TYPE_PEN_CIRCLE + TOKEN_GAP + x + TOKEN_GAP + y + TOKEN_GAP + iStyle + MOTION_GAP; 
 }
 
+function drawQueueCircleAnimation( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder )
+{
+    return function()
+    {
+        drawQueueCircle( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder );
+    }
+}
+
 function drawQueueCircle( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder )
 {
     if ( gDrawEnable )
@@ -593,6 +608,14 @@ function addQueueText( text, x, y, iStyle, fontColor )
     return "" + TYPE_TEXT + TOKEN_GAP + text + TOKEN_GAP + x + TOKEN_GAP + y + TOKEN_GAP + iStyle + TOKEN_GAP + fontColor + MOTION_GAP;    
 }
 
+function drawQueueTextAnimation( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder )
+{
+    return function()
+    {
+        drawQueueText( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder );
+    }
+}
+
 function drawQueueText( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder )
 {
     if ( gDrawEnable )
@@ -673,7 +696,13 @@ function drawImage( iImageIndex, x, y, widthRatio, heightRatio )
     return "" + TYPE_IMAGE + TOKEN_GAP + iImageIndex + TOKEN_GAP + x + TOKEN_GAP + y + TOKEN_GAP + widthRatio + TOKEN_GAP + heightRatio + MOTION_GAP;
 }
 
-
+function drawQueueImageAnimation( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder )
+{
+    return function()
+    {
+        drawQueueImage( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder );
+    }
+}
 
 function drawQueueImage( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder )
 {

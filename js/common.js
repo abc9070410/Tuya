@@ -2020,21 +2020,21 @@ function touchEndEvent( iTouchX, iTouchY )
         if ( needDrawWhenTouchEnd() )
         {       
             draw( iTouchX, iTouchY );
+            
         }
+        storeNowDrawing();
         //alert( "DRAW END : " + gCanvas.height + "," + gCanvas.width );
         
         gPreviousPhyX = INIT_POS;
         gPreviousPhyY = INIT_POS;
-        
         gPenHistory += TOUCH_GAP; // record the current touch
-        
-        storeNowDrawing();
     }
     else
     {
         if ( inCanvas( iTouchX, iTouchY ) )
         {
             draw( iTouchX, iTouchY ); // only touch, not swipe
+            storeNowDrawing();
         }
         
         if ( gPenHistory && gPenHistory != "" )
@@ -2222,21 +2222,24 @@ function issueDrawQueue( iMode, iPlayNumber, iPlayStyle, iPenStyle, iBeginTouchO
     
     if ( gbTotalQueueLoaded )
     {
+        // only delay for play, not edit
+        var iSpeed = iMode == EDIT_MODE ? 0 : getPlaySpeed() * giQueueDelayCoefficient;
+    
         if ( iPenStyle == TYPE_IMAGE )
         {
-            drawQueueImage( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder ); // 6
+            setTimeout( drawQueueImageAnimation( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder ), iSpeed );
         }
         else if ( iPenStyle == TYPE_TEXT )
         {
-            drawQueueText( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder );
+            setTimeout( drawQueueTextAnimation( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder ), iSpeed );
         }
         else if ( iPenStyle == TYPE_PEN_CIRCLE )
         {
-            drawQueueCircle( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder );
+            setTimeout( drawQueueCircleAnimation( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder ), iSpeed );
         }
         else if ( iPenStyle == TYPE_PEN_RECTANGLE )
         {
-            drawQueueRectangle( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder );
+            setTimeout( drawQueueRectangleAnimation( iMode, iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder ), iSpeed );
         }
         else
         {

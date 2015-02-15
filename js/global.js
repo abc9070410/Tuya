@@ -626,9 +626,10 @@ var giExecutionType = EXECUTION_TYPE_NONE;
 
 var gbDebug = false;
 
-
-
-
+// delay the simple touch draw(not swipe), including circle, rectangle, text and image
+var giQueueDelayCoefficient = 10;
+// delay the simple touch draw(not swipe), including line, dot and eraser
+var giTouchDelayCoefficient = 7;
 
 
 
