@@ -598,7 +598,9 @@ function shouldStyleSkipped( iStyleIndex )
     if ( sStyle == S_WINDOWS_8.toString() || sStyle == S_WINDOWS_8_LIGHT.toString() )
     {
         if ( giPlatform == PLATFORM_ANDROID ||
-             giPlatform == PLATFORM_FIREFOXOS )
+             giPlatform == PLATFORM_FIREFOXOS ||
+             giPlatform == PLATFORM_TIZEN ||
+             giPlatform == PLATFORM_UBUNTU_TOUCH )
         {
             return true;
         }
@@ -1032,6 +1034,11 @@ function getHTMLOfAuthorDiv()
     return string;
 }
 
+function setBackground()
+{
+    var eContent = document.getElementById( ID_PAINT );
+    eContent.style.background = getBackColor();
+}
 
 function setStyle()
 {
@@ -1311,7 +1318,7 @@ function getHTMLOfFontSizeDiv()
     for ( var i = 1; i <= iCount; i ++ )
     {
         var sIcon = i == getFontSizeIndex() ? "icon check" : "icon target";
-        var sText = "" + ( 90 + i * 10 ) + "%";
+        var sText = "" + ( BASE_FONT_SIZE_RATIO + i * 10 ) + "%";
         string += getHTMLOfListLinkItem( sIcon, "javascript:clickFontSize(" + i + ");", ID_CLICK_FONT_SIZE + i, sText );
     }
     

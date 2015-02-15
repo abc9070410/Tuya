@@ -272,6 +272,11 @@ function file_viewer_load()
         controller = document.getElementById( ID_IMG_FILE_SELECTOR );
         imageFile = getFile( controller );
     }
+    
+    if ( !isRegularImageFile( imageFile ) )
+    {
+        return;
+    }
 
     var reader = new FileReader();
     reader.readAsDataURL( imageFile );
@@ -374,8 +379,12 @@ function openImageStuff()
         imageFile = getFile( controller );
     }
     
-    loadImageFile( imageFile, false, false );
+    if ( isRegularImageFile( imageFile ) )
+    {
+        loadImageFile( imageFile, false, false );
+    }
 }
+    
 
 function getFile( controller )
 {
@@ -393,9 +402,18 @@ function getFile( controller )
     return controller.files[0];
 }
 
-function loadImageFile( file, needShow, needRecord )
+function isRegularImageFile( file )
 {
+    log( "this file type : " + file.type );
     log( "this image stuff size : " + file.size );
+    
+    if ( file.type.indexOf( "image" ) < 0 )
+    {
+        var sText = S_OPEN_FILE_FAIL_MESSAGE[giLanguageIndex] + ": <br>" + file.name + " = " + file.type + "";
+        
+        showMessage( sText );
+        return false;
+    }
     
     var iFileSizeKB = parseInt( file.size / 1024, 10 );
     
@@ -405,9 +423,14 @@ function loadImageFile( file, needShow, needRecord )
         var sText = S_FILE_SIZE_IS_TOO_LARGE[giLanguageIndex] + ": <br>" + iFileSizeKB + " KB > " + MAX_IMAGE_STUFF_KB + " KB";
         
         showMessage( sText );
-        return;
+        return false;
     }
+    
+    return true;
+}
 
+function loadImageFile( file, needShow, needRecord )
+{
     var reader = new FileReader();
     reader.readAsDataURL( file );
     

@@ -1011,7 +1011,10 @@ function clickBackColor( iColorIndex )
     
     addGlobal();
     
-    disableSideMenu();
+    //disableSideMenu();
+ 
+    var sMessage = S_SETTING_DONE[giLanguageIndex] + ".  " + S_PLAY[giLanguageIndex] + " ?";
+    showConfirmMessage( sMessage, clickPlayObverse );
 }
 
 
@@ -1265,6 +1268,7 @@ function clickMenu()
 function clickPlayObverse()
 {
     clickPlay( PLAY_STYLE_OBVERSE );
+    gbDebug = true;
 }
 
 function clickPlayReverse()
@@ -1279,31 +1283,9 @@ function clickPlayDefault()
 
 function clickPlay( iPlayStyle )
 {
+    offMessage();
+
     disableSideMenu();
-
-    var aiPos = getPosOfPenHistory( gPenHistory );
-    var iX = aiPos[POS_X];
-    var iY = aiPos[POS_Y];
-    var iWidth = aiPos[POS_WIDTH];
-    var iHeight = aiPos[POS_HEIGHT];
-    
-    iWidth = getScreenWidth();
-    iHeight = getScreenHeight();
-    
-    //alert( gPenHistory.substring( 0, 30 ) );
-
-    //goURL( "http://A" + encodeText( gPenHistory ) );
-    //alert( gPenHistory );
-    
-    //var oldCount = gPenHistory.split( MOTION_GAP ).length;
-    
-    //gPenHistory = shiftPenHistory( gPenHistory, -iX + 10, -iY + 10 );
-    //gPenHistory = resizePenHistory( gPenHistory, 0.5 );
-    
-    //var newCount = gPenHistory.split( MOTION_GAP ).length;
-    
-    //alert( oldCount + " -> " + newCount );
-    //alert( getMotionCount() );
     
     setPlayStyle( iPlayStyle );
     issuePlay( iPlayStyle );
@@ -2388,8 +2370,10 @@ function playLogo( iLogoIndex )
         //return;
     }
     
+    var iCoefficient = getPaintWidth() > getPaintHeight() ? 2 : 3;
+    
     var iCanvasWidth = getPaintWidth();
-    var iCanvasHeight = getPaintHeight() / 3;
+    var iCanvasHeight = getPaintHeight() / iCoefficient;
 
     initCanvas( iCanvasHeight, iCanvasWidth );
 
@@ -2650,7 +2634,7 @@ function getDefaultColor()
 
 function getFontRatio()
 {
-    return 100 + getFontSizeIndex() * 10;
+    return BASE_FONT_SIZE_RATIO + getFontSizeIndex() * 10;
 }
 
 
@@ -2942,7 +2926,6 @@ function getStaticHTML( sHtml )
     return sHtml;
     //return ( typeof Windows != 'undefined' ) ? toStaticHTML( sHtml ) : sHtml;
 }
-
 
 
 function getImageDemo()

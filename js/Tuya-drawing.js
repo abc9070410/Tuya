@@ -126,6 +126,8 @@ function cleanCanvas( iStyle )
 {
     cleanCanvasByColor( getBackColor() );
     
+    setBackground();
+    
     return "" + TYPE_CLEAN + TOKEN_GAP + iStyle + MOTION_GAP;
 }
 
@@ -212,10 +214,10 @@ function drawRectangle( x, y, bIsEraser, iStyle )
         if ( bIsEraser )
         {
             gContext.save();
-            gContext.beginPath(); // 開始路徑
+            gContext.beginPath();
             gContext.rect( x, y, iWidth, iWidth );
-            gContext.closePath(); // 關閉路徑
-            gContext.fillStyle = sColor; // 填充顏色
+            gContext.closePath();
+            gContext.fillStyle = sColor;
             gContext.fill();
             gContext.restore();
         }

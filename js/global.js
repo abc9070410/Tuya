@@ -32,8 +32,10 @@ var PLATFORM_IOS_7 = 4;
 var PLATFORM_FIREFOXOS = 5;
 var PLATFORM_CHROMEOS = 6;
 var PLATFORM_WINDOWS_8 = 7;
-var PLATFORM_BROWSER = 8;
-var giPlatform = PLATFORM_CHROMEOS; // default platform
+var PLATFORM_TIZEN = 8;
+var PLATFORM_UBUNTU_TOUCH = 9;
+var PLATFORM_BROWSER = 10;
+var giPlatform = PLATFORM_TIZEN; // default platform
 
 var B_ON_DEVICE = true;
 
@@ -313,6 +315,8 @@ var TYPE_REMOVE = 2;
 
 var MAX_IMAGE_STUFF_KB = 1024; // max file size is 1024 KB
 
+var BASE_FONT_SIZE_RATIO = 70;
+
 // ------ flag -------
 
 var gbOnDevice = false; // init by condova or not
@@ -447,6 +451,7 @@ var gsWPCodeOfAD = "ca-app-pub-5587953649122605/9254258298";
 
 
 var gsDebug = "";
+var gbDebug = false;
 
 // ----- Inneractive -----
 

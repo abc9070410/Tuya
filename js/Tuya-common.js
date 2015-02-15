@@ -169,6 +169,7 @@ function playPenHistory( iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder 
         {
             //alert( giPenTouchCount ); 
             playStopped( false );
+            storeNowDrawing(); // store the drawing in the end of play
         }
     }
     else if ( needWaitingPlay( getPenStyle( penMotions[iLastMotionOrder] ) ) )
@@ -236,6 +237,9 @@ function shiftMotion( motion, offsetX, offsetY )
     var motionTokens = motion.split( TOKEN_GAP );
     
     var penStyle = motionTokens[0];
+    
+    offsetX = parseInt( offsetX, 10 );
+    offsetY = parseInt( offsetY, 10 );
 
     if ( penStyle == TYPE_PEN_LINE )
     {
@@ -340,6 +344,7 @@ function resizeMotion( motion, ratio )
 
     return newMotion;
 }
+
 
 function respeedMotion( motion, ratio )
 {
@@ -531,7 +536,7 @@ function resetPenHistory2( penHistory, iNewWidth, iNewHeight, bFitFileSize )
     var iOldY = aiPos[POS_Y];
     var iOldWidth = aiPos[POS_WIDTH];
     var iOldHeight = aiPos[POS_HEIGHT];
-    var iBorder = 10;
+    var iBorder = 2;
 
     if ( bFitFileSize && giFileWidth > 0 && giFileHeight > 0 )
     {
@@ -539,13 +544,14 @@ function resetPenHistory2( penHistory, iNewWidth, iNewHeight, bFitFileSize )
         iOldHeight = giFileHeight;
     }
 
-    var fWidthRatio = iNewWidth / iOldWidth;
-    var fHeightRatio = iNewHeight / iOldHeight;
+    var iRatioCoefficient = 0.9;
+    var fWidthRatio = iNewWidth * iRatioCoefficient / iOldWidth;
+    var fHeightRatio = iNewHeight * iRatioCoefficient / iOldHeight;
     var fRatio = fWidthRatio > fHeightRatio ? fHeightRatio : fWidthRatio;
     
     if ( !bFitFileSize )
     {
-        var iX = ( iNewWidth - iOldWidth * fRatio );
+        var iX = ( iNewWidth - iOldWidth * fRatio ) / 2;
         var iY = ( iNewHeight - iOldHeight * fRatio );
 
         var iFixedX = iX + iBorder;

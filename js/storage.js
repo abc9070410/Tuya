@@ -157,10 +157,12 @@ function getStyleIndex()
     var value = getItem( KEY_STYLE_INDEX );
     
     var iDefaultIndex = 6; // IOS7 Style as default 
-    if ( giPlatform == PLATFORM_BROWSER )
+    if ( giPlatform == PLATFORM_ANDROID || giPlatform == PLATFORM_BROWSER )
         iDefaultIndex = 1; // Android Style
     else if ( giPlatform == PLATFORM_WP || giPlatform == PLATFORM_WINDOWS_8 )
         iDefaultIndex = 3; // WP style
+    else if ( giPlatform == PLATFORM_TIZEN )
+        iDefaultIndex = 8; // Tizen Style
 
     return value ? parseInt( value, 10 ) : iDefaultIndex;
 }
@@ -203,10 +205,12 @@ function getFontSizeIndex()
     
     if ( !value )
     {
-        if ( giPlatform == PLATFORM_WP )
-            return 3; // 120%
+        if ( giPlatform == PLATFORM_BROWSER )
+            return 4; // BASE_FONT_SIZE_RATIO + 40%
+        else if ( giPlatform == PLATFORM_WP )
+            return 2; // BASE_FONT_SIZE_RATIO + 20%
         else
-            return 2; // default:110%
+            return 1; // default:BASE_FONT_SIZE_RATIO + 10%
     }
 
     return parseInt( value, 10 );
@@ -303,7 +307,7 @@ function getPenWidth()
     
     var iValue = parseInt( value, 10 );
 
-    return ( iValue && !isNaN( iValue ) ) ? iValue : 10;
+    return ( iValue && !isNaN( iValue ) ) ? iValue : 15;
 }
 
 function setRectangleWidth( iWidth )
@@ -317,7 +321,7 @@ function getRectangleWidth()
     
     var iValue = parseInt( value, 10 );
 
-    return ( iValue && !isNaN( iValue ) ) ? iValue : 100;
+    return ( iValue && !isNaN( iValue ) ) ? iValue : 65;
 }
 
 function setCircleWidth( iWidth )
@@ -331,7 +335,7 @@ function getCircleWidth()
     
     var iValue = parseInt( value, 10 );
 
-    return ( iValue && !isNaN( iValue ) ) ? iValue : 100;
+    return ( iValue && !isNaN( iValue ) ) ? iValue : 65;
 }
 
 function setEraserWidth( iWidth )
@@ -526,7 +530,10 @@ function getBorderWidth()
 
 function setPlayStyle( iStyle )
 {
-    setItem( KEY_PLAY_STYLE_INDEX, iStyle );
+    if ( iStyle != PLAY_STYLE_DEMO )
+    {
+        setItem( KEY_PLAY_STYLE_INDEX, iStyle );
+    }
 }
 
 function getPlayStyle()
