@@ -35,7 +35,7 @@ var PLATFORM_WINDOWS_8 = 7;
 var PLATFORM_TIZEN = 8;
 var PLATFORM_UBUNTU_TOUCH = 9;
 var PLATFORM_BROWSER = 10;
-var giPlatform = PLATFORM_TIZEN; // default platform
+var giPlatform = PLATFORM_BROWSER; // default platform
 
 var B_ON_DEVICE = true;
 

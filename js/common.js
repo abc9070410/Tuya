@@ -1440,6 +1440,7 @@ function writeHTMLOfSaveCanvas( sDataURL )
 function clickSaveDrawingFile()
 {
     var sFileName = getImageFileName( IMAGE_TYPE_PNG );
+    var bMessageShowed = true;
 
     if ( typeof Windows != 'undefined' ) // for Win 8 APP only
     {
@@ -1469,15 +1470,21 @@ function clickSaveDrawingFile()
     else 
     {
         this.href = gsPngDataURL;
-        //showMessage( S_SUCCESS[giLanguageIndex] + " : " + sFileName );
+        bMessageShowed = false;
     }
     
     disableSideMenu();
+    
+    if ( !bMessageShowed )
+    {
+        showMessage( S_SUCCESS[giLanguageIndex] + " : " + sFileName );
+    }
 }
 
 function clickSaveAnimationFile()
 {
     var sFileName = getImageFileName( IMAGE_TYPE_BMP );
+    var bMessageShowed = true;
 
     if ( filePrepared() )
     {
@@ -1532,7 +1539,7 @@ function clickSaveAnimationFile()
         else
         {
             this.href = gsBmpDataURL;
-            //showMessage( S_SUCCESS[giLanguageIndex] + " : " + sFileName );
+            bMessageShowed = false;
         }
     }
     else
@@ -1541,6 +1548,11 @@ function clickSaveAnimationFile()
     }
     
     disableSideMenu();
+    
+    if ( !bMessageShowed )
+    {
+        showMessage( S_SUCCESS[giLanguageIndex] + " : " + sFileName );
+    }
 }
 
 function filePrepared()
