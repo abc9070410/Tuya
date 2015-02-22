@@ -62,6 +62,7 @@ var ID_ABOUT = "about";
 var ID_ABOUT_APP = "aboutApp";
 var ID_ABOUT_AUTHOR = "aboutAuthor";
 var ID_RELATED_LINKS = "relatedLinks";
+var ID_ADVANCE = "advance1";
 
 var ID_TEST = "test";
 
@@ -130,6 +131,7 @@ var ID_CLICK_RELATED_LINK = "ID_CLICK_RELATED_LINK";
 var ID_CLICK_STYLE = "ID_CLICK_STYLE";
 var ID_CLICK_LANGUAGE = "ID_CLICK_LANGUAGE";
 var ID_CLICK_FONT_SIZE = "ID_CLICK_FONT_SIZE";
+var ID_CLICK_CUT_EDIT = "ID_CLICK_CUT_EDIT";
 var ID_CLICK_IMG_FILE_PICKER = "ID_CLICK_IMG_FILE_PICKER";
 var ID_CLICK_IMG_STUFF_FILE_PICKER = "ID_CLICK_IMG_STUFF_FILE_PICKER";
 
@@ -140,13 +142,15 @@ var ID_INPUT_TEXT = "ID_INPUT_TEXT";
 var ID_DOWNLOAD_ANIMATION_LINK = "ID_DOWNLOAD_ANIMATION_LINK";
 var ID_DOWNLOAD_DRAWING_LINK = "ID_DOWNLOAD_DRAWING_LINK";
 
+var ID_CLICK_EDIT_CONFIRM = "ID_CLICK_EDIT_CONFIRM";
+
 var ID_CLICK_ALL_ARRAY = new Array( ID_CLICK_UNDO, "appbar.layout.collapse.left.variant", "↻", ID_CLICK_MENU, "appbar.lines.horizontal.4", "▤", ID_CLICK_PLAY, "appbar.tv", "►", ID_CLICK_PAUSE, "appbar.control.pause", "■", ID_CLICK_CONTINUE, "appbar.control.play", "►", ID_CLICK_CLEAN, "appbar.clipboard.variant", "❒", ID_CLICK_PEN_RECORD_SIDE_MENU, "appbar.film", "₪", ID_CLICK_PEN_STYLE_SIDE_MENU, "appbar.edit.box", "✎", ID_CLICK_COLOR_SIDE_MENU, "appbar.crop", "▩", ID_CLICK_PLAY_SIDE_MENU, "appbar.camera", "►", ID_CLICK_FILE_SIDE_MENU, "appbar.cabinet.variant", "✇", ID_CLICK_GO_BACK_TO_PAINT, "appbar.arrow.left", "⇦", ID_CLICK_GO_BACK_TO_PEN_STYLE, "appbar.arrow.left", "⇦", 
 ID_CLICK_FORE_COLOR_SIDE_MENU, "appbar.layer.arrange.solid.sendbackward", "❏", ID_CLICK_BACK_COLOR_SIDE_MENU, "appbar.layer.arrange.solid.bringforward", "❐", ID_CLICK_PLAY_STYLE_OBVERSE, "appbar.timer.forward", "►", ID_CLICK_PLAY_STYLE_REVERSE, "appbar.timer.rewind", "◄", ID_CLICK_PLAY_SPEED_UP, "appbar.add", "+", ID_CLICK_PLAY_SPEED_DOWN, "appbar.minus", "-", ID_CLICK_CUT_PEN_HISTORY, "appbar.scissor", "✁", ID_CLICK_REDO, "appbar.layout.collapse.right", "↺", 
 ID_CLICK_PEN_STYLE_LINE, "appbar.draw.marker", "✐", ID_CLICK_PEN_STYLE_CIRCLE, "appbar.cd", "●", ID_CLICK_PEN_STYLE_RECTANGLE, "appbar.fullscreen.box", "■", ID_CLICK_PEN_STYLE_DOT, "appbar.draw.paintbrush", "❄", ID_CLICK_PEN_STYLE_ERASER, "appbar.clean", "◕", ID_CLICK_PEN_STYLE_TEXT, "appbar.message.smiley", "✑", ID_CLICK_PEN_STYLE_OTHER, "appbar.code.xml", "ஐ", ID_CLICK_PEN_STYLE_IMAGE, "appbar.image", "❖", 
 ID_CLICK_CHANGE_TEXT, "appbar.edit.box", "✎", ID_CLICK_PEN_STYLE_DEMO_INCREASE, "appbar.edit.add", "+", ID_CLICK_PEN_STYLE_DEMO_DECREASE, "appbar.edit.minus", "-", ID_CLICK_DELAY, "appbar.crop", "▣", ID_CLICK_DELAY_SECOND_INCREASE, "appbar.add", "+", ID_CLICK_DELAY_SECOND_DECREASE, "appbar.minus", "-", ID_CLICK_NEW_FILE, "appbar.page.bold", "☁", 
-ID_CLICK_CHANGE_FILE_NAME, "appbar.clipboard.variant.edit", "✎", ID_CLICK_GO_EMAIL_OF_AUTHOR, "appbar.email", "✉", ID_CLICK_GO_BACK_TO_DEFAULT, "appbar.repeat", "⇄", ID_IMG_FILE_SELECTOR, "appbar.folder.open", "", ID_IMG_STUFF_FILE_SELECTOR, "appbar.folder.open", "", ID_DOWNLOAD_ANIMATION_LINK, "appbar.cabinet.in", "✿", ID_DOWNLOAD_DRAWING_LINK, "appbar.image.snow", "✿", ID_PAINT, "appbar.cabinet.out", "✐" );
+ID_CLICK_CHANGE_FILE_NAME, "appbar.clipboard.variant.edit", "✎", ID_CLICK_GO_EMAIL_OF_AUTHOR, "appbar.email", "✉", ID_CLICK_GO_BACK_TO_DEFAULT, "appbar.repeat", "⇄", ID_IMG_FILE_SELECTOR, "appbar.folder.open", "", ID_IMG_STUFF_FILE_SELECTOR, "appbar.folder.open", "", ID_DOWNLOAD_ANIMATION_LINK, "appbar.cabinet.in", "✿", ID_DOWNLOAD_DRAWING_LINK, "appbar.image.snow", "✿", ID_PAINT, "appbar.cabinet.out", "✐", ID_ADVANCE, "appbar.edit.box", "＊", ID_CLICK_EDIT_CONFIRM, "appbar.edit.box", "✐" );
 
-
+// "☑""☒"
 
 
 // ----- all keys for local storage -----
@@ -238,6 +242,9 @@ var SYMBOL_SQUARE = "■";
 var LEFT_QUOTATION_MARK = "『";
 var RIGHT_QUOTATION_MARK = "』";
 
+var SYMBOL_CHECKED = "☑";
+var SYMBOL_UNCHECKED = "☒";
+
 
 var TOUCH_GAP = "_"; // the symbol between touches
 var MOTION_GAP = "-"; // the symbol between motions
@@ -317,6 +324,8 @@ var MAX_IMAGE_STUFF_KB = 1024; // max file size is 1024 KB
 
 var BASE_FONT_SIZE_RATIO = 70;
 
+var ITEMS_PER_ADVANCE_PAGE = 6;
+
 // ------ flag -------
 
 var gbOnDevice = false; // init by condova or not
@@ -344,6 +353,8 @@ var TRANSITION_SLIDE = "slide";
 var TRANSITION_SLIDE_LEFT = "slideLeft";
 var gsTransition = TRANSITION_SLIDE;
 
+var TYPE_PEN_INVALID = 0;
+
 var TYPE_PEN_LINE = 10;
 var TYPE_PEN_RECTANGLE = 11;
 var TYPE_PEN_CIRCLE = 12;
@@ -363,8 +374,9 @@ var gPenStyle = TYPE_PEN_LINE; // current pen style
 var PLAY_STYLE_OBVERSE = 1; // play in obverse order
 var PLAY_STYLE_REVERSE = 2; // play in reverse order
 var PLAY_STYLE_DEMO = 3;
-var PLAY_STYLE_CUT = 4;
-var giPlayStyle = PLAY_STYLE_DEMO;
+var PLAY_STYLE_LOADING = 4;
+var PLAY_STYLE_CUT = 5;
+var giPlayStyle = PLAY_STYLE_LOADING;
 
 var EDIT_MODE = 1;
 var PLAY_MODE = 2;
@@ -392,8 +404,8 @@ var SIDEMENU_PEN_STYLE_OTHER = 15;
 var SIDEMENU_PEN_STYLE_IMAGE = 16;
 var giNowSideMenu = SIDEMENU_PAINT;
 
-var PORTRAIT = 1;
-var LANDSCAPE = 2;
+var PORTRAIT = 1; // height > width
+var LANDSCAPE = 2; // width > height
 
 var ICON_HEADER = 1;
 var ICON_ITEM = 2;
@@ -630,6 +642,19 @@ var gbDebug = false;
 var giQueueDelayCoefficient = 10;
 // delay the simple touch draw(not swipe), including line, dot and eraser
 var giTouchDelayCoefficient = 7;
+
+// for advance edit page
+var giFirstDrawingInNowPage = -1;
+var giBeginCutIndex = 0;
+var giEndCutIndex = 0;
+var giPrevDrawingCount = 0;
+var gbNeedResetDrawingCount = false;
+var giTempPrevPenStyle = TYPE_PEN_LINE;
+var gbTempQueueTouchEnd = true;
+var giTempDrawQueueIndex = -1;
+var giTouchNum = 0;
+var giTempTouchNum = 0;
+var gabNeedCut = new Array();
 
 
 

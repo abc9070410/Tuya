@@ -121,6 +121,11 @@ function changeHash( sPageID )
         //clearHistory();
         updateDiv( sPageID, getHTMLOfOptionDiv() );
     }
+    else if ( sPageID === ID_ADVANCE )
+    {
+        gbNeedResetDrawingCount = true;
+        updateDiv( sPageID, getHTMLOfAdvanceDiv() );
+    }
     else if ( sPageID === ID_STYLE )
     {
         updateDiv( ID_STYLE, getHTMLOfStyleDiv() );
@@ -199,6 +204,7 @@ function initUI()
     string += getEmptyDiv( ID_PAINT, S_CANVAS[giLanguageIndex] );
     string += getEmptyDiv( ID_MENU, S_MENU[giLanguageIndex] );
     string += getEmptyDiv( ID_OPTION, S_OPTION[giLanguageIndex] );
+    string += getEmptyDiv( ID_ADVANCE, S_ADVANCE[giLanguageIndex] );
     
     string += getEmptyDiv( ID_STYLE, S_STYLE[giLanguageIndex] );
     
@@ -250,8 +256,9 @@ function initUI()
 
     updateDiv( "afui", getStaticHTML( string ) );
     
-    if ( gsNowDivID == ID_MAIN )
+    if ( !getNowHash() || getNowHash().length < 3 ) // show main logo at beginning
     {
+        log( "play main logo" );
         playLogo( MAIN_LOGO );
     }
 }
@@ -331,6 +338,30 @@ function getHTMLOfHeaderIconItem( sClass, sHref, sID, sText )
     }
 }
 
+function getHTMLOfNextButton( sHref, sID )
+{
+    if ( notSupportJsLink() )
+    {
+        return "<a class='button next' style='float:right' id='" + sID + "'  >" + S_NEXT[giLanguageIndex] + "</a>";
+    }
+    else
+    {
+        return "<a class='button next' style='float:right' href='" + sHref + "' >" + S_NEXT[giLanguageIndex] + "</a>";
+    }
+}
+
+function getHTMLOfPrevButton( sHref, sID )
+{
+    if ( notSupportJsLink() )
+    {
+        return "<a class='button previous' style='float:left' id='" + sID + "'  >" + S_PREV[giLanguageIndex] + "</a>";
+    }
+    else
+    {
+        return "<a class='button previous' style='float:left' href='" + sHref + "' >" + S_PREV[giLanguageIndex] + "</a>";
+    }
+}
+
 function getHTMLOfListLinkItem( sClass, sHref, sID, sText )
 {
     if ( notSupportJsLink() )
@@ -340,9 +371,9 @@ function getHTMLOfListLinkItem( sClass, sHref, sID, sText )
             if ( notSupportExternalIcon() )
             {
                 // go to the href and do the ID event
-                if ( !navSupported() && needGoPaintPageThenDo( sID ) )
+                if ( !navSupported() && needGoPaintPageThenDo( asID[0] ) )
                 {
-                    return "<ul class='list' style='font-size:" + getFontRatio() + "%' ><li><a href='#" + getPaintPageID() + "' id='" + sID + "' data-transition='" + gsTransition + "' >" + getIcon( sID ) + sText + "</a></li></ul>";
+                    return "<ul class='list' style='font-size:" + getFontRatio() + "%' ><li><a href='#" + getPaintPageID() + "' id='" + asID[i] + "' data-transition='" + gsTransition + "' >" + getIcon( sID ) + sText + "</a></li></ul>";
                 }
                 else
                 {
@@ -398,6 +429,69 @@ function getHTMLOfListLinkItemWithImage( sClass, sHref, sID, sText, sImage )
         return "<ul class='list' style='font-size:" + getFontRatio() + "%' ><li><a class='" + sClass + "' href='" + sHref + "' data-transition='" + gsTransition + "' ><img style='max-width:100px;max-height:100px;' src='" + sImage + "' />" + sText + "</a></li></ul>";
     }
 }
+
+function getHTMLOfGridLinkItemWithImage( sClass, asHref, asID, asText, asImage )
+{    
+    var iCount = 3;//getOrientation() == LANDSCAPE ? 3 : 2;
+    var iWidth = parseInt( getPaintWidth() / ( iCount + 1 ), 10 );
+    var iHeight = parseInt( iWidth * getPaintHeight() / getPaintWidth(), 10 );
+    
+    var iFontRatio = getFontRatio() + 100;
+
+    var sGridHTML = "<div class='grid'>";
+    
+    if ( notSupportJsLink() )
+    {
+        if ( notSupportDefaultIcon() )
+        {
+            // go to the href and do the ID event
+            if ( !navSupported() && needGoPaintPageThenDo( sID ) )
+            {
+                for ( var i = 0; i < iCount; i ++ )
+                {
+                    sGridHTML += "<a href='#" + getPaintPageID() + "'><img class='" + sClass + "' id='" + asID[i] + "' data-transition='" + gsTransition + "' style='max-width:" + iWidth + "px;max-height:" + iHeight + "px;' src='" + asImage[i] + "' >" + asText[i] + "</img></a>";
+                }
+                sGridHTML += "</div>";
+            
+                log("-------1");
+                return "<ul class='list' style='font-size:" + iFontRatio + "%' ><li>" + sGridHTML + "</li></ul>";
+            }
+            else
+            {
+                for ( var i = 0; i < iCount; i ++ )
+                {
+                    sGridHTML += "<img class='" + sClass + "' id='" + asID[i] + "' data-transition='" + gsTransition + "' style='max-width:" + iWidth + "px;max-height:" + iHeight + "px;' src='" + asImage[i] + "' >" + asText[i] + "</img>";
+                }
+                sGridHTML += "</div>";
+            
+                log("-------2");
+                return "<ul class='list' style='font-size:" + iFontRatio + "%' ><li>" + sGridHTML + "</li></ul>";
+            }
+        }
+        else
+        {
+            for ( var i = 0; i < iCount; i ++ )
+            {
+                sGridHTML += "<img style='max-width:" + iWidth + "px;max-height:" + iHeight + "px;' id='" + asID[i] + "' src='" + asImage[i] + "' ><div class='" + sClass + "' data-transition='" + gsTransition + "'>" + asText[i] + "</div></img>";
+            }
+            sGridHTML += "</div>";
+        
+            log("-------3");
+            return "<ul class='list' style='font-size:" + iFontRatio + "%' ><li>" + sGridHTML + "</li></ul>";
+        }
+    }
+    else
+    {
+        for ( var i = 0; i < iCount; i ++ )
+        {
+            sGridHTML += "<div class='col" + iCount + "'><a class='" + sClass + "' href='" + asHref[i] + "' data-transition='" + gsTransition + "' ><img style='max-width:" + iWidth + "px;max-height:" + iHeight + "px;' src='" + asImage[i] + "' />" + asText[i] + "</a></div>";
+        }
+        sGridHTML += "</div>";
+        
+        return "<ul class='list' style='font-size:" + iFontRatio + "%' ><li>" +sGridHTML + "</li></ul>";
+    }
+}
+
 
 function getHTMLOfListLinkItemWithColor( sClass, sHref, sID, sText, sColor )
 {
@@ -480,6 +574,25 @@ function getHTMLOfListLinkItemWithTitle( sClass, sHref, sID, sText, sTitle )
     }
 }
 
+function getHTMLOfGrid( sClass, sID, asText, asImage )
+{
+    var iCount = getOrientation() == LANDSCAPE ? 3 : 2;
+    var iWidth = parseInt( getPaintWidth() / ( iCount + 1 ), 10 );
+    var iHeight = parseInt( iWidth * getPaintHeight() / getPaintWidth(), 10 );
+    
+    var sGridHTML = "<div class='grid'>";
+    for ( var i = 0; i < iCount; i ++ )
+    {
+        //sGridHTML += "<div class='col" + iCount + "'><img class='" + sClass + "' id='" + sID + "' data-transition='" + gsTransition + "' style='max-width:" + iWidth + "px;max-height:" + iHeight + "px;' src='" + asImage[i] + "' ><p class='icon' style='font-size:" + getFontRatio() + "%'>" + asText[i] + "</p></img></div>";
+        
+        sGridHTML += "<img class='" + sClass + "' id='" + sID + "' data-transition='" + gsTransition + "' style='max-width:" + iWidth + "px;max-height:" + iHeight + "px;' src='" + asImage[i] + "' ><p class='icon' style='font-size:" + getFontRatio() + "%'>" + asText[i] + "</p></img>";
+    }
+    
+    sGridHTML += "</div>";
+    
+    return "<ul class='list'><li>" + sGridHTML + "</li></ul>";
+}
+
 // list item without link
 function getHTMLOfListText( sClass, sText )
 {
@@ -530,11 +643,18 @@ function getHTMLOfHeaderDiv()
         // two case :
         // 1. option page
         // 2. show the image content after saving drawing in some browsers
-        else if ( gsNowDivID == ID_OPTION || gsNowDivID.indexOf( "ajax" ) >= 0 )
+        else if ( gsNowDivID == ID_OPTION ||
+                  gsNowDivID == ID_ADVANCE || 
+                  gsNowDivID.indexOf( "ajax" ) >= 0 )
         {
             //string += "<a href='#" + getPaintPageID() + "' class='button icon paper' style='float:left'>" + S_GO_BACK_TO[giLanguageIndex] + S_CANVAS[giLanguageIndex] + "</a>";
             
             string += getHTMLOfHeaderIconItem( "button icon paper", "#" + getPaintPageID(), getPaintPageID(), S_GO_BACK_TO[giLanguageIndex] + S_CANVAS[giLanguageIndex] );
+            
+            if ( gsNowDivID == ID_ADVANCE )
+            {
+                string += getHTMLOfHeaderIconItem( "button icon pencil", "javascript:clickEditConfirm();", ID_CLICK_EDIT_CONFIRM, S_CONFIRM[giLanguageIndex] );
+            }
         }
         else
         {
@@ -603,7 +723,8 @@ function shouldStyleSkipped( iStyleIndex )
         if ( giPlatform == PLATFORM_ANDROID ||
              giPlatform == PLATFORM_FIREFOXOS ||
              giPlatform == PLATFORM_TIZEN ||
-             giPlatform == PLATFORM_UBUNTU_TOUCH )
+             giPlatform == PLATFORM_UBUNTU_TOUCH ||
+             getPaintWidth() < getPaintHeight() ) // 
         {
             return true;
         }
@@ -740,6 +861,7 @@ function getHTMLOfNavPenRecordDiv()
     string += getHTMLOfListText( "", sText );
     string += getHTMLOfListLinkItem( "icon refresh", "javascript:clickUndo();", ID_CLICK_UNDO, S_UNDO[giLanguageIndex] );
     string += getHTMLOfListLinkItem( "icon stack", "javascript:clickRedo();", ID_CLICK_REDO, S_REDO[giLanguageIndex] );
+    string += getHTMLOfListItem( "icon tools", ID_ADVANCE, S_ADVANCE[giLanguageIndex] );
 
     return string;
 }
@@ -959,6 +1081,119 @@ function getHTMLOfNavFileDiv()
         string += getHTMLOfListText( "icon folder", sText );
     }
 
+    return string;
+}
+
+function getHTMLOfAdvanceDiv()
+{
+    var string = "";
+
+    var penTouchs = gPenHistory.split( TOUCH_GAP );
+    var iTouchCount = penTouchs.length - 2;
+    var asText = new Array();
+    var asImage = new Array();
+    var asHref = new Array();
+    var asID = new Array();
+    var iNowDrawIndex = 0;
+    var i = 0;
+
+    if ( gbNeedResetDrawingCount ) // initial value
+    {
+        giFirstDrawingInNowPage = getNextDrawIndex() - 1;
+        
+        for ( i = 0; i < getNextDrawIndex(); i ++ )
+        {
+            gabNeedCut[i] = false;
+        }
+        
+        gbNeedResetDrawingCount = false;
+    }
+    
+    var iDrawIndex = giFirstDrawingInNowPage;
+    
+    log( "-> " + giFirstDrawingInNowPage + "," + iTouchCount );
+    
+    var iFirstNo = giFirstDrawingInNowPage < ITEMS_PER_ADVANCE_PAGE ? 0 : giFirstDrawingInNowPage - ITEMS_PER_ADVANCE_PAGE;
+    var iLastNo = giFirstDrawingInNowPage - 1;
+    var sPrevPageText = "No." + iFirstNo + " ~ No." + iLastNo;
+    
+    iFirstNo = giFirstDrawingInNowPage + ITEMS_PER_ADVANCE_PAGE;
+    iLastNo = getNextDrawIndex() - iFirstNo < ITEMS_PER_ADVANCE_PAGE ? getNextDrawIndex() : getNextDrawIndex() - ITEMS_PER_ADVANCE_PAGE;
+    var sNextPageText = "No." + iFirstNo + " ~ No." + iLastNo;
+    
+    
+    for ( i = 0; i < ITEMS_PER_ADVANCE_PAGE; i += 3 )
+    {
+        var iNotExisted = 0;
+    
+        for ( var j = 0; j < 3; j ++ )
+        {
+            iNowDrawIndex = iDrawIndex - i - j;
+        
+            //if ( !penTouchs[i+j] || !gDrawingHistory[iNowDrawIndex] )
+            if ( iNowDrawIndex <= 0 || !gDrawingHistory[iNowDrawIndex] )
+            {
+                //log( "penTouchs not existed: " + i + "," + j );
+                log( "gDrawingHistory[i] not existed: " + iNowDrawIndex );
+                asID[j] = asHref[j] = asImage[j] = asText[j] = "";
+                iNotExisted ++;
+                continue;
+            }
+        
+            /*
+            var sTempPenTouch = penTouchs[i+j];  
+            var penMotions = sTempPenTouch.split( MOTION_GAP );
+            var iLastMotionOrder = penMotions.length - 1;
+            */
+            
+            var sSymbol = gabNeedCut[iNowDrawIndex] ? SYMBOL_UNCHECKED : SYMBOL_CHECKED;
+            
+            asText[j] = sSymbol + " " + iNowDrawIndex;// + ": " + getPenStyle( penMotions[iLastMotionOrder] );
+            asImage[j] = gDrawingHistory[iNowDrawIndex];
+            asHref[j] = "javascript:clickCutEdit(" + ( i + j ) + ")";
+            asID[j] = ID_CLICK_CUT_EDIT + ( i + j );
+        }
+        
+        if ( iNotExisted == 3 )
+        {
+            log( "Not existed: " + iNowDrawIndex );
+            continue;
+        }
+        
+        var sClass = "icon";
+        //string += getHTMLOfGrid( sClass, sID, asText, asImage );
+        string += getHTMLOfGridLinkItemWithImage( sClass, asHref, asID, asText, asImage );
+    }
+
+    if ( giFirstDrawingInNowPage > ITEMS_PER_ADVANCE_PAGE - 1 )
+    {
+        string += getHTMLOfPrevButton( "javascript:clickPrevAdvancePage();", ID_CLICK_NEW_FILE );
+    }
+    
+    if ( getNextDrawIndex() > giFirstDrawingInNowPage + ITEMS_PER_ADVANCE_PAGE - 1 )
+    {
+        string += getHTMLOfNextButton( "javascript:clickNextAdvancePage();", ID_CLICK_NEW_FILE );
+    }
+    
+    string += "<br>";
+    string += "<br>";
+
+    return string;
+}
+
+function getHTMLOfAdvanceEditDiv( iTouchIndex )
+{
+    var string = "";
+    
+    var iDrawIndex = giFirstDrawingInNowPage - iTouchIndex;
+    var sText = "No." + iDrawIndex;
+    var sImage = gDrawingHistory[iDrawIndex];
+    
+    string += getHTMLOfListLinkItemWithImage( "icon", "", "", sText, sImage );
+    
+    string += getHTMLOfListLinkItem( "icon setting", "javascript:clickBeginCut(" + iDrawIndex + ");", ID_CLICK_CHANGE_FILE_NAME, S_BEGIN_OF_CUT[giLanguageIndex] );
+    string += getHTMLOfListLinkItem( "icon setting", "javascript:clickEndCut(" + iDrawIndex + ");", ID_CLICK_CHANGE_FILE_NAME, S_END_OF_CUT[giLanguageIndex] );
+    
     return string;
 }
 
@@ -1448,7 +1683,8 @@ function isFullScreenWidth( sID )
            sID == ID_ABOUT_APP ||
            sID == ID_ABOUT_AUTHOR ||
            sID == ID_RELATED_LINKS ||
-           sID == ID_CLICK_GO_BACK_TO_DEFAULT;
+           sID == ID_CLICK_GO_BACK_TO_DEFAULT ||
+           sID == ID_ADVANCE;
 }
 
 function isDarkThemeNow()

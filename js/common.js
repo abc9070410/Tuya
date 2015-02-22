@@ -224,8 +224,6 @@ function getRandomColor()
 
 
 
-
-
 function saveTextFile( text )
 {
 
@@ -320,7 +318,6 @@ function loadDone()
     }
     else
     {
-        //alert( gsCurrentName + "->" + gsBackupName );
         restoreCurrentData();
     }
     
@@ -657,7 +654,6 @@ function bindScrollEvent( sDivID )
             {
                 //toggleHeader();
             }
-            //alert( "DOWN: " + iStart + "->" + iEnd  );
         }
         else if ( iStart > iEnd )
         {
@@ -669,7 +665,6 @@ function bindScrollEvent( sDivID )
             {
                 //toggleHeader();
             }
-            //alert( "UP: " + iStart + "->" + iEnd  );
         }
         else if ( iStart === 0 && iEnd === 0 )
         {
@@ -835,7 +830,7 @@ function initCanvas( height, width )
     //alert( height + "," + width );
     gCanvas = document.getElementById( 'c' + giPlayNumber );  //canvas itself
     gContext = gCanvas.getContext( '2d' );
-    
+   
     gCanvas.height = height;
     gCanvas.width  = width;
 
@@ -844,8 +839,8 @@ function initCanvas( height, width )
         cleanPenHistory();
         cleanCanvas( CLEAN_STYLE_NORMAL );
         initPenHistory();
-        //storeNowDrawing(); 
         //showMessage( "NEW CANVAS" + getGlobal() );
+        log( "[1]" + gDrawingIndex );
         storeNowDrawing();
     }
     //drawLine( 50, 50, 100, 100 );
@@ -1169,6 +1164,7 @@ function setCanvasMode( iMode )
 
 function issuePlay( iPlayStyle )
 {
+    log( "set giPlayStyle to " + iPlayStyle );
     giPlayStyle = iPlayStyle;
     
     initQueue();
@@ -1305,7 +1301,7 @@ function showOpenImage( iCenterX, iCenterY )
     gPenHistory += TOUCH_GAP;
     gPenStyle = sPenStyleBackup;
 
-    clickPlay( PLAY_STYLE_DEMO );
+    clickPlay( PLAY_STYLE_LOADING );
 }
 
 function clickFileSideMenu()
@@ -1367,6 +1363,9 @@ function issueChangeFileName()
         //disableSideMenu();
     }
 }
+
+
+
 
 function clickNewFile()
 {
@@ -1538,7 +1537,9 @@ function clickSaveAnimationFile()
         }
         else
         {
-            this.href = gsBmpDataURL;
+            this.href = gsBmpDataURL.replace("image/bmp", "image/octet-stream");
+        
+            //this.href = gsBmpDataURL;
             bMessageShowed = false;
         }
     }
@@ -1551,7 +1552,7 @@ function clickSaveAnimationFile()
     
     if ( !bMessageShowed )
     {
-        showMessage( S_SUCCESS[giLanguageIndex] + " : " + sFileName );
+        showMessage( S_SUCCESS[giLanguageIndex] + " -- " + sFileName );
     }
 }
 
@@ -1918,6 +1919,100 @@ function clickPenStyleImage()
     }
 }
 
+function clickPrevAdvancePage()
+{
+    giFirstDrawingInNowPage -= ITEMS_PER_ADVANCE_PAGE;
+    updateDiv( ID_ADVANCE, getHTMLOfAdvanceDiv() );
+}
+
+function clickNextAdvancePage()
+{
+    giFirstDrawingInNowPage += ITEMS_PER_ADVANCE_PAGE;
+    updateDiv( ID_ADVANCE, getHTMLOfAdvanceDiv() );
+}
+
+function clickCutEditEvent( event )
+{
+    clickCutEdit( event.target.iArgument );
+}
+
+function clickCutEdit( iTouchIndex )
+{
+    updateDiv( getNavID(), getHTMLOfAdvanceEditDiv( iTouchIndex ) );
+    enableSideMenu();
+}
+
+function clickBeginCut( iDrawingIndex )
+{    
+    giBeginCutIndex = iDrawingIndex;
+    
+    unmarkCutIndexs();
+    markCutIndexs( iDrawingIndex );
+    
+    updateDiv( ID_ADVANCE, getHTMLOfAdvanceDiv() );
+    disableSideMenu();
+}
+
+function clickEndCut( iDrawingIndex )
+{
+    giEndCutIndex = iDrawingIndex;
+    
+    unmarkCutIndexs();
+    markCutIndexs( iDrawingIndex );
+    
+    updateDiv( ID_ADVANCE, getHTMLOfAdvanceDiv() );
+    disableSideMenu();
+}
+
+function clickEditConfirm()
+{
+    unmarkCutIndexs();
+
+    updateDiv( ID_ADVANCE, getHTMLOfAdvanceDiv() );
+}
+
+function unmarkCutIndexs()
+{
+    for ( var i = 0; i < gabNeedCut.length; i ++ )
+    {
+        gabNeedCut[i] = false;
+    }
+}
+
+function markCutIndexs( iTargetIndex )
+{
+    gabNeedCut[iTargetIndex] = true;
+
+    if ( giEndCutIndex == 0 || giBeginCutIndex == 0 )
+    {
+        return;
+    }
+    
+    var iS;
+    var iE;
+    
+    if ( giEndCutIndex > giBeginCutIndex )
+    {
+        iS = giBeginCutIndex;
+        iE = giEndCutIndex;
+    }
+    else
+    {
+        iE = giBeginCutIndex;
+        iS = giEndCutIndex;
+    }
+    
+    for ( var i = iS; i <= iE; i ++ )
+    {
+        gabNeedCut[i] = true;
+    }
+}
+
+function clickCancelEdit()
+{
+    updateDiv( ID_ADVANCE, getHTMLOfAdvanceDiv() );
+}
+
 function inCanvas( iTouchX, iTouchY )
 {
     return getHeaderHeight() < iTouchY;
@@ -2019,10 +2114,18 @@ function touchEndEvent( iTouchX, iTouchY )
  
         if ( needDrawWhenTouchEnd() )
         {       
-            draw( iTouchX, iTouchY );
-            
+            draw( iTouchX, iTouchY );       
         }
-        storeNowDrawing();
+        log( "[2]" + gDrawingIndex );
+        
+        // some style store drawing before touch end, 
+        // like circle, rectangle, text and image 
+        if ( !needWaitingPlay( gPenStyle ) )
+        {
+            log( "[2.1]" + gDrawingIndex );
+            storeNowDrawing();
+        }
+        
         //alert( "DRAW END : " + gCanvas.height + "," + gCanvas.width );
         
         gPreviousPhyX = INIT_POS;
@@ -2034,6 +2137,7 @@ function touchEndEvent( iTouchX, iTouchY )
         if ( inCanvas( iTouchX, iTouchY ) )
         {
             draw( iTouchX, iTouchY ); // only touch, not swipe
+            log( "[3]" + gDrawingIndex );
             storeNowDrawing();
         }
         
@@ -2222,6 +2326,12 @@ function issueDrawQueue( iMode, iPlayNumber, iPlayStyle, iPenStyle, iBeginTouchO
     
     if ( gbTotalQueueLoaded )
     {
+        log( "[88]" + iTouchOrder );
+        if ( iPlayStyle == PLAY_STYLE_LOADING )
+        {
+            storeNowDrawing(); // rebuild the drawing data for advance edit
+        }
+        
         // only delay for play, not edit
         var iSpeed = iMode == EDIT_MODE ? 0 : getPlaySpeed() * giQueueDelayCoefficient;
     
@@ -2385,8 +2495,7 @@ function playLogo( iLogoIndex )
         //return;
     }
     
-    var iCoefficient = getPaintWidth() > getPaintHeight() ? 2 : 3;
-    
+    var iCoefficient = getOrientation() == LANDSCAPE ? 2 : 3;
     var iCanvasWidth = getPaintWidth();
     var iCanvasHeight = getPaintHeight() / iCoefficient;
 

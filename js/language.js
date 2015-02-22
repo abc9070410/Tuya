@@ -114,6 +114,14 @@ var S_EMAIL_TO_AUTHOR = new Array( '寫信給作者', 'Email to Author', '写信
 
 var S_FILE_SIZE_IS_TOO_LARGE = new Array( '圖片檔案過大', 'The file size is too large', '图片档案过大', 'ファイルサイズが大きすぎる', '파일 크기가 너무 커서', 'O tamanho do arquivo é muito grande', 'El tamaño del archivo es demasiado grande', 'फ़ाइल का आकार बहुत बड़ा है', 'حجم الملف كبير جدا', 'Размер файла слишком велик', 'La taille du fichier est trop grande', 'ขนาดไฟล์มีขนาดใหญ่เกินไป', 'Die Dateigröße ist zu groß', 'La dimensione del file è troppo grande' );
 
+var S_ADVANCE = new Array( '進階', 'Advance', '', '', '', '', '', '', '', '', '' );
+var S_BEGIN_OF_CUT = new Array( '剪輯開始點', 'Begin of cut', '', '', '', '', '', '', '', '', '' );
+var S_END_OF_CUT = new Array( '剪輯結束點', 'End of cut', '', '', '', '', '', '', '', '', '' );
+var S_NEXT = new Array( '下一頁', 'Next', '', '', '', '', '', '', '', '', '' );
+var S_PREV = new Array( '上一頁', 'Prev', '', '', '', '', '', '', '', '', '' );
+
+
+
 
 
 // ----------------------------------------------------

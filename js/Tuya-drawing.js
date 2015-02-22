@@ -42,9 +42,13 @@ function draw( phyX, phyY )
                 var iWidthRatio = gImageWidthRatio[iImageIndex];
                 var iHeightRatio = gImageHeightRatio[iImageIndex];
                 
-                iWidthRatio *= getSpecificWidth( TYPE_IMAGE ) / 100;
-                iHeightRatio *= getSpecificWidth( TYPE_IMAGE ) / 100;
-            
+                // only resize for image stuff, not for drawing image (*.png)
+                if ( giPlayStyle != PLAY_STYLE_DEMO && giPlayStyle != PLAY_STYLE_LOADING )
+                {
+                    iWidthRatio *= getSpecificWidth( TYPE_IMAGE ) / 100;
+                    iHeightRatio *= getSpecificWidth( TYPE_IMAGE ) / 100;
+                }
+                
                 sSinglePenHistory = addQueueImage( iImageIndex, phyX, phyY, iWidthRatio, iHeightRatio );
             }
             else if ( gPenStyle == TYPE_TEXT )
@@ -407,10 +411,10 @@ function drawCircle( x, y, bIsEraser, iStyle )
         if ( bIsEraser )
         {
             gContext.save();
-            gContext.beginPath(); // 開始路徑
-            gContext.arc( x, y, iWidth / 2, 0, Math.PI * 2, true ); // 畫出圓形
-            gContext.closePath(); // 關閉路徑
-            gContext.fillStyle = sColor; // 填充顏色
+            gContext.beginPath();
+            gContext.arc( x, y, iWidth / 2, 0, Math.PI * 2, true );
+            gContext.closePath();
+            gContext.fillStyle = sColor; 
             gContext.fill();
             gContext.restore();
         }
@@ -756,15 +760,32 @@ function issueNextQueue( iMode, iPlayNumber, iPlayStyle, iPenStyle, iBeginTouchO
         gbTotalQueueLoaded = true;
 
         log( "TOTAL_DONE" + giDrawQueueCount + ":" + giDrawQueueIndex );
-        
+
         if ( iMode == PLAY_MODE )
         {
+            log( "[55]" + iTouchOrder );
+            if ( iPlayStyle == PLAY_STYLE_LOADING )
+            {
+                //storeNowDrawing(); // rebuild the drawing data for advance edit
+            }
+            
             var iNextOrder = getNext( iPlayStyle, iTouchOrder );
             setTimeout( playPenHistoryAnimation( iPlayNumber, iPlayStyle, iBeginTouchOrder, iNextOrder ), getPlaySpeed() );
         }
         else
         {
-            storeNowDrawing(); // avoid taking the wrong screenshot when touch end
+            log( "[5]" + giTouchNum );
+        
+            if ( giTouchNum != giTempTouchNum )
+            {
+                log( "[5.1]" + gDrawingIndex );
+                storeNowDrawing(); 
+                giTempTouchNum = giTouchNum;
+            }
+            else
+            {
+                replaceNowDrawing(); // avoid taking the wrong screenshot when touch end
+            }
         }
     }
 }

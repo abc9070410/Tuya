@@ -530,7 +530,7 @@ function getBorderWidth()
 
 function setPlayStyle( iStyle )
 {
-    if ( iStyle != PLAY_STYLE_DEMO )
+    if ( iStyle != PLAY_STYLE_DEMO && iStyle != PLAY_STYLE_LOADING )
     {
         setItem( KEY_PLAY_STYLE_INDEX, iStyle );
     }

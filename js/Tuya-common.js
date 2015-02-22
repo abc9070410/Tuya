@@ -71,7 +71,6 @@ function playStopped( bNeedShowBackupDrawing )
     
     giDrawQueueIndex = 0;
     
-    //if ( giPlayStyle != PLAY_STYLE_DEMO )// && !isSideMenuOn() )
     if ( bNeedShowBackupDrawing )
     {
         showStoredDrawing( NOWDO ); // show the last drawing before playing
@@ -117,9 +116,9 @@ function playPenHistory( iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder 
     {
         if ( !isNowCanvasMode( PAUSE_MODE ) )
         {
-            if ( iPlayStyle != PLAY_STYLE_DEMO )
+            if ( iPlayStyle != PLAY_STYLE_DEMO && iPlayStyle != PLAY_STYLE_LOADING )
             {
-                storeNowDrawing(); // backup the current drawing before playing
+                replaceNowDrawing();//storeNowDrawing(); // backup the current drawing before playing
             }
             cleanCanvas( CLEAN_STYLE_NORMAL );
         }
@@ -133,8 +132,7 @@ function playPenHistory( iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder 
     if ( giPenTouchCount < iTouchOrder )
     //if ( iPlayNumber != giPlayNumber );
     {
-        //alert( giPenTouchCount + " < " + iTouchOrder );
-        playStopped( iPlayStyle != PLAY_STYLE_DEMO );
+        playStopped( iPlayStyle != PLAY_STYLE_DEMO && iPlayStyle != PLAY_STYLE_LOADING );
         return;
     }
     
@@ -148,8 +146,10 @@ function playPenHistory( iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder 
         iLastMotionOrder--;
         //log( "-- : " + iLastMotionOrder + ":" + penMotions[iLastMotionOrder] );
     }
+    
+    var iCurrentPenStyle = getPenStyle( penMotions[iLastMotionOrder] );
 
-    if ( needWaitingPlay( getPenStyle( penMotions[iLastMotionOrder] ) ))
+    if ( needWaitingPlay( iCurrentPenStyle ) )
     {
         //log( "LMO : " + iLastMotionOrder + " [" + penMotions[iLastMotionOrder] + "] : " + " [" + penMotions[iLastMotionOrder+1] + "] : " + sTempPenTouch );
     }
@@ -162,26 +162,37 @@ function playPenHistory( iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder 
         
         setPlayTimer( penMotions[j].split( TOKEN_GAP ), iPlayNumber, iBeginTouchOrder, iTouchOrder, iLastMotionOrder, iOrder );
     }
-
+    
+    
+    
     if ( isPlayEnd( iPlayStyle, iBeginTouchOrder, iTouchOrder ) )
     {
         if ( allowStopPlay( iPlayNumber ) )
         {
             //alert( giPenTouchCount ); 
             playStopped( false );
-            storeNowDrawing(); // store the drawing in the end of play
+            replaceNowDrawing(); //storeNowDrawing(); // store the drawing in the end of play
         }
     }
-    else if ( needWaitingPlay( getPenStyle( penMotions[iLastMotionOrder] ) ) )
+    else if ( needWaitingPlay( iCurrentPenStyle ) )
     {
         log( "not PPHA" );
+        log( "[33]" + iTouchOrder );
     }
     else
     {
+        log( "[44]" + iTouchOrder + "_" + iCurrentPenStyle  );
+        if ( iPlayStyle == PLAY_STYLE_LOADING && giTempPrevPenStyle != TYPE_PEN_INVALID )
+        {
+            storeNowDrawing(); // rebuild the drawing data for advance edit
+        }
+        
         var iSpeed = penMotions.length > 3 ? getPlaySpeed() : getPlaySpeed() * giTouchDelayCoefficient;
         //alert( iTouchOrder + ":" + penMotions.length );
         var iNextOrder = getNext( iPlayStyle, iTouchOrder );
         setTimeout( playPenHistoryAnimation( iPlayNumber, iPlayStyle, iBeginTouchOrder, iNextOrder ), iSpeed * penMotions.length + 1 );
+        
+        giTempPrevPenStyle = iCurrentPenStyle;
     }
 }
 
@@ -608,7 +619,7 @@ function resetPenHistory( penHistory, x, y, width, height )
 
 function getPenStyle( motion )
 {
-    return motion ? motion.split( TOKEN_GAP )[0] : 0;
+    return motion ? motion.split( TOKEN_GAP )[0] : TYPE_PEN_INVALID;
 }
 
 function setPlayTimer( motionTokens, iPlayNumber, iBeginTouchOrder, iTouchOrder, iLastMotionOrder, order )
@@ -678,7 +689,7 @@ function issueQueue( motionTokens, iPlayNumber, iPenStyle, iBeginTouchOrder, iTo
         if ( giDrawQueueCount == 0 )
         {
             showProcessBar( false, iPlayNumber, iTouchOrder, order );
-        
+
             initQueue();
             storeTempDrawing( TEMP_STORE_SHOWTRACE );
             giDrawQueueIndex = getBeginImageAnimationIndex( giPlayStyle );
@@ -714,8 +725,6 @@ function issueQueue( motionTokens, iPlayNumber, iPenStyle, iBeginTouchOrder, iTo
     if ( iLastMotionOrder == 1 || // only touch, not swipe
          iLastMotionOrder == order )
     {
-        log( "->" + giDrawQueueCount );
-        
         if ( giDrawQueueCount > 0 )
         {
             issueDrawQueue( PLAY_MODE, iPlayNumber, giPlayStyle, iPenStyle, iBeginTouchOrder, iTouchOrder );
@@ -849,13 +858,27 @@ function storeTempDrawing( iStyle )
     }
 }
 
+function replaceNowDrawing()
+{
+    if ( gCanvas )
+    {
+        gDrawingHistory[gDrawingIndex] = gCanvas.toDataURL();
+    }
+}
+
 function storeNowDrawing()
 {
     if ( gCanvas )
     {
+        log( "STORE " + gDrawingIndex );
         gDrawingIndex = getNextDrawIndex();
         gDrawingHistory[gDrawingIndex] = gCanvas.toDataURL();
     }
+}
+
+function initDrawingHistory()
+{
+    gDrawingHistory = new Array( DRAWING_MAX_COUNT );
 }
 
 // get the last drawing

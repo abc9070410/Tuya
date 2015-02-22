@@ -74,7 +74,8 @@ function showStoredImage( iImageType )
         //document.getElementById( "canvasImg" ).src = dataURL;
     };
     
-    storeNowDrawing();
+    log( "[4]" + gDrawingIndex );
+    replaceNowDrawing(); //storeNowDrawing();
     imageObj.src = getNowDrawing();
 }
 
@@ -303,6 +304,8 @@ function file_viewer_load()
 function loadImageToCanvas()
 {
     offMessage();
+    
+    initDrawingHistory(); 
 
     var encode = gsTempFileData.toString();
     //var beginIndex = encode.indexOf( "base64," );
@@ -352,7 +355,7 @@ function loadImageToCanvas()
             }
 
             // default play in obverse order
-            playPenHistory( giPlayNumber, PLAY_STYLE_DEMO, 0, 0 ); 
+            playPenHistory( giPlayNumber, PLAY_STYLE_LOADING, 0, 0 ); 
         }
         else
         {
