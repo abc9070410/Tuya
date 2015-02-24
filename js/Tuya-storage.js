@@ -264,9 +264,10 @@ function file_viewer_load()
         
     var imageFile;
     
-    if ( giPlatform == PLATFORM_WP )
+    if ( gOpenImageFile && ( giPlatform == PLATFORM_WP || giPlatform == PLATFORM_IOS ) )
     {
-        imageFile = gOpenImageFile;
+        imageFile = gOpenImageFile;       
+        gOpenImageFile = null;
     }
     else
     {
@@ -274,7 +275,7 @@ function file_viewer_load()
         imageFile = getFile( controller );
     }
     
-    if ( !isRegularImageFile( imageFile ) )
+    if ( giPlatform != PLATFORM_IOS && !isRegularImageFile( imageFile ) )
     {
         return;
     }
@@ -376,6 +377,7 @@ function openImageStuff()
     if ( giPlatform == PLATFORM_WP )
     {
         imageFile = gOpenImageFile;
+        gOpenImageFile = null;
     }
     else
     {

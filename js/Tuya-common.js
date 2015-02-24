@@ -70,6 +70,7 @@ function playStopped( bNeedShowBackupDrawing )
     unlockPen();
     
     giDrawQueueIndex = 0;
+    giDrawingResetBeginIndex = 0;
     
     if ( bNeedShowBackupDrawing )
     {
@@ -171,6 +172,7 @@ function playPenHistory( iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder 
         {
             //alert( giPenTouchCount ); 
             playStopped( false );
+            
             replaceNowDrawing(); //storeNowDrawing(); // store the drawing in the end of play
         }
     }
@@ -180,7 +182,7 @@ function playPenHistory( iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder 
         log( "[33]" + iTouchOrder );
     }
     else
-    {
+    {    
         log( "[44]" + iTouchOrder + "_" + iCurrentPenStyle  );
         if ( iPlayStyle == PLAY_STYLE_LOADING && giTempPrevPenStyle != TYPE_PEN_INVALID )
         {
@@ -517,7 +519,7 @@ function cutPenHistory( penHistory, iTouchOrderBegin, iTouchOrderEnd )
     
     // first, get the head part
     
-    for ( var i = 0; i < iTouchOrderBegin; i ++ )
+    for ( var i = 1; i < iTouchOrderBegin; i ++ )
     {
         iEnd = penHistory.indexOf( TOUCH_GAP, iEnd + 1 );
     }
@@ -528,7 +530,7 @@ function cutPenHistory( penHistory, iTouchOrderBegin, iTouchOrderEnd )
     
     iBegin = iEnd;
 
-    for ( var i = iTouchOrderBegin; i < iTouchOrderEnd; i ++ )
+    for ( var i = iTouchOrderBegin; i <= iTouchOrderEnd; i ++ )
     {
         iBegin = penHistory.indexOf( TOUCH_GAP, iBegin + 1 );
     }
@@ -873,6 +875,7 @@ function storeNowDrawing()
         log( "STORE " + gDrawingIndex );
         gDrawingIndex = getNextDrawIndex();
         gDrawingHistory[gDrawingIndex] = gCanvas.toDataURL();
+        gaiTouchIndexForEdit[gDrawingIndex] = getTouchCount();
     }
 }
 

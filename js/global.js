@@ -28,14 +28,13 @@ var gLocalLanguageIndex = -1; // get the platform local index by Phonegap API
 var PLATFORM_WP = 1;
 var PLATFORM_ANDROID = 2;
 var PLATFORM_IOS = 3;
-var PLATFORM_IOS_7 = 4;
 var PLATFORM_FIREFOXOS = 5;
 var PLATFORM_CHROMEOS = 6;
 var PLATFORM_WINDOWS_8 = 7;
 var PLATFORM_TIZEN = 8;
 var PLATFORM_UBUNTU_TOUCH = 9;
 var PLATFORM_BROWSER = 10;
-var giPlatform = PLATFORM_BROWSER; // default platform
+var giPlatform = PLATFORM_IOS; // default platform
 
 var B_ON_DEVICE = true;
 
@@ -625,7 +624,7 @@ var gbDivWasChanged = false;
 var gStoredItem = {};
 var gsFontFamily = "Times New Roman";
 var gsTouchStartDivID = "";
-var gOpenImageFile = null; // for windows phone 8.1
+var gOpenImageFile = null; // for IOS and Windows Phone 8.1
 
 var IMAGE_TO_CANVAS = 1;
 var IMAGE_TO_STUFF = 2;
@@ -647,7 +646,7 @@ var giTouchDelayCoefficient = 7;
 var giFirstDrawingInNowPage = -1;
 var giBeginCutIndex = 0;
 var giEndCutIndex = 0;
-var giPrevDrawingCount = 0;
+var giDrawingResetBeginIndex = 0;
 var gbNeedResetDrawingCount = false;
 var giTempPrevPenStyle = TYPE_PEN_LINE;
 var gbTempQueueTouchEnd = true;
@@ -655,12 +654,30 @@ var giTempDrawQueueIndex = -1;
 var giTouchNum = 0;
 var giTempTouchNum = 0;
 var gabNeedCut = new Array();
+var gaiTouchIndexForEdit = new Array();
+
+// for save/load dynamic image on IOS
+var gRootFS = null;
+var gFileEntries = new Array();
 
 
 
+// for parseSingleLanguage() and buildLanguage()
 
-//var gsLanguage = "";
-//var gasLanguage = new Array( gsZH, gsEN, gsCN, gsJA, gsKO, gsPT, gsES, gsHI, gsAR, gsRU, gsFR, gsTH, gsDE, gsIT );
-
-
+var gsZH = "";
+var gsEN = "";
+var gsCN = "";
+var gsJA = "";
+var gsKO = "";
+var gsPT = "";
+var gsES = "";
+var gsHI = "";
+var gsAR = "";
+var gsRU = "";
+var gsFR = "";
+var gsTH = "";
+var gsDE = "";
+var gsIT = "";
+var gsLanguage = "";
+var gasLanguage = new Array( gsZH, gsEN, gsCN, gsJA, gsKO, gsPT, gsES, gsHI, gsAR, gsRU, gsFR, gsTH, gsDE, gsIT );
 

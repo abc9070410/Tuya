@@ -114,14 +114,14 @@ var S_EMAIL_TO_AUTHOR = new Array( '寫信給作者', 'Email to Author', '写信
 
 var S_FILE_SIZE_IS_TOO_LARGE = new Array( '圖片檔案過大', 'The file size is too large', '图片档案过大', 'ファイルサイズが大きすぎる', '파일 크기가 너무 커서', 'O tamanho do arquivo é muito grande', 'El tamaño del archivo es demasiado grande', 'फ़ाइल का आकार बहुत बड़ा है', 'حجم الملف كبير جدا', 'Размер файла слишком велик', 'La taille du fichier est trop grande', 'ขนาดไฟล์มีขนาดใหญ่เกินไป', 'Die Dateigröße ist zu groß', 'La dimensione del file è troppo grande' );
 
-var S_ADVANCE = new Array( '進階', 'Advance', '', '', '', '', '', '', '', '', '' );
-var S_BEGIN_OF_CUT = new Array( '剪輯開始點', 'Begin of cut', '', '', '', '', '', '', '', '', '' );
-var S_END_OF_CUT = new Array( '剪輯結束點', 'End of cut', '', '', '', '', '', '', '', '', '' );
-var S_NEXT = new Array( '下一頁', 'Next', '', '', '', '', '', '', '', '', '' );
-var S_PREV = new Array( '上一頁', 'Prev', '', '', '', '', '', '', '', '', '' );
-
-
-
+var S_ADVANCE = new Array( '進階', 'Advance', '进阶', 'アドバンスは', '사전은', 'Advance', 'Advance', 'अग्रिम', 'تقدم', 'Advance', 'Advance', 'ล่วงหน้า', 'Vorwärts', 'Advance' );
+var S_BEGIN_OF_CUT = new Array( '剪輯開始點', 'Begin of cut', '剪辑开始点', 'カットのカット', ' 컷의 컷', ' Começar de corte', ' Begin de corte', ' कटौती की कटौती', 'بيغن من قطع', ' Бегин резания', ' Begin de coupe', 'เริ่มต้นของการตัด', 'Begin der Schnitt', 'Inizio del taglio' );
+var S_END_OF_CUT = new Array( '剪輯結束點', 'End of cut', '剪辑结束点', '次に', ' 다음', ' Fim do corte', ' Fin de la corte', ' अगला', 'نهاية قطع', ' в конце разреза', ' Fin de coupe', 'ของการตัด', 'End of cut', 'End of cut' );
+var S_NEXT = new Array( '下一頁', 'Next', '下一页', '前の', ' 이전', ' Next', ' Siguiente', ' पिछला', 'التالي', ' рядом', ' Suivant', 'ต่อไป', 'Weiter', 'Avanti' );
+var S_PREV = new Array( '上一頁', 'Prev', '上一页', 'オープンアニメーション', ' 오픈 애니메이션', ' Prev', ' Anterior', ' ओपन एनीमेशन', 'السابق', ' Пред', ' Précédent', 'ย้อนกลับ', 'Zurück', 'Indietro' );
+var S_OPEN_ANIMATION = new Array( '開啟動畫', 'Open animation', '开启动画', 'オープン描画の終了を開始します', ' 도면 열기의 끝 시작', ' Open animação', ' Open animación', ' ओपन ड्राइंग का अंत शुरू', 'الرسوم المتحركة المفتوح', ' Open анимации', ' Open animation', 'นิเมชั่นเปิด', 'Open-Animation', 'Open animation' );
+var S_OPEN_DRAWING = new Array( '開啟圖畫', 'Open drawing', '开启图画', 'オープン描画', '도면 열기', ' desenho aberto', ' dibujo abierto', 'ओपन ड्राइंग', 'افتح الرسم', ' открытого чертежа', ' Ouvrir le dessin', 'การวาดภาพเปิด', 'Open Zeichnung', 'Apri il disegno' );
+var S_EDIT_DONE = new Array( '編輯完成 ', 'Edit done', '编辑完成', '編集が行わ', '편집 완료', 'Editar feito', 'Editar hacer', 'संपादित किया', 'تحرير القيام به', 'Редактировать сделано', 'Modifier fait', 'แก้ไขทำ', 'getan bearbeiten', 'Modifica fatto' );
 
 
 // ----------------------------------------------------

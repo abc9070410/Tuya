@@ -840,7 +840,6 @@ function initCanvas( height, width )
         cleanCanvas( CLEAN_STYLE_NORMAL );
         initPenHistory();
         //showMessage( "NEW CANVAS" + getGlobal() );
-        log( "[1]" + gDrawingIndex );
         storeNowDrawing();
     }
     //drawLine( 50, 50, 100, 100 );
@@ -1164,7 +1163,6 @@ function setCanvasMode( iMode )
 
 function issuePlay( iPlayStyle )
 {
-    log( "set giPlayStyle to " + iPlayStyle );
     giPlayStyle = iPlayStyle;
     
     initQueue();
@@ -1283,6 +1281,13 @@ function clickPlay( iPlayStyle )
 
     disableSideMenu();
     
+    if ( giDrawingResetBeginIndex > 0 ) 
+    {
+        // need replace the stored drawing from giDrawingResetBeginIndex ?
+        
+        //gDrawingIndex = giDrawingResetBeginIndex - 1;
+    }
+    
     setPlayStyle( iPlayStyle );
     issuePlay( iPlayStyle );
 }
@@ -1366,6 +1371,10 @@ function issueChangeFileName()
 
 
 
+function clickOpenAnimation()
+{
+    updateDocumentDir();
+}
 
 function clickNewFile()
 {
@@ -1537,9 +1546,7 @@ function clickSaveAnimationFile()
         }
         else
         {
-            this.href = gsBmpDataURL.replace("image/bmp", "image/octet-stream");
-        
-            //this.href = gsBmpDataURL;
+            this.href = gsBmpDataURL;
             bMessageShowed = false;
         }
     }
@@ -1552,7 +1559,7 @@ function clickSaveAnimationFile()
     
     if ( !bMessageShowed )
     {
-        showMessage( S_SUCCESS[giLanguageIndex] + " -- " + sFileName );
+        showMessage( S_SUCCESS[giLanguageIndex] + " : " + sFileName );
     }
 }
 
@@ -1745,6 +1752,26 @@ function clickPenStyleLine()
     setPenStyle( TYPE_PEN_LINE );
     showDemoPage( TYPE_PEN_LINE );
 }
+
+
+
+function clickOpenFileByPlugin( iEntryIndex )
+{
+    gFileEntries[iEntryIndex].file( 
+        function( file ) {
+            showMessage( "file:" + file.size + ":"+ file.type );
+            gOpenImageFile = file;
+            file_viewer_load();
+        }, fail );
+}
+
+
+
+
+
+
+
+
 
 function showDemoPage( iPenStyle )
 {
@@ -1950,6 +1977,7 @@ function clickBeginCut( iDrawingIndex )
     markCutIndexs( iDrawingIndex );
     
     updateDiv( ID_ADVANCE, getHTMLOfAdvanceDiv() );
+    updateDiv( ID_HEADER, getHTMLOfHeaderDiv() );
     disableSideMenu();
 }
 
@@ -1961,14 +1989,52 @@ function clickEndCut( iDrawingIndex )
     markCutIndexs( iDrawingIndex );
     
     updateDiv( ID_ADVANCE, getHTMLOfAdvanceDiv() );
+    updateDiv( ID_HEADER, getHTMLOfHeaderDiv() );
     disableSideMenu();
 }
 
 function clickEditConfirm()
 {
+    var iS;
+    var iE;
+    
+    if ( giEndCutIndex > giBeginCutIndex )
+    {
+        iS = giBeginCutIndex;
+        iE = giEndCutIndex;
+    }
+    else
+    {
+        iE = giBeginCutIndex;
+        iS = giEndCutIndex;
+    }
+    
+    log( "BEFORE EDIT:" + gPenHistory.length );
+
+    gPenHistory = cutPenHistory( gPenHistory, iS, iE );
+    savePenHistory();
+    
+    log( "AFTER EDIT:" + gPenHistory.length );
+    
+    for ( var i = iS, j = 1; i <= iE; i ++, j ++ )
+    {
+        gDrawingHistory[i] = gDrawingHistory[iE + j];
+        gDrawingHistory[iE + j] = null;
+    }
+    
+    gDrawingIndex -= j - 1;
+    gbNeedResetDrawingCount = true; // rebuild advance edit page
+
     unmarkCutIndexs();
 
     updateDiv( ID_ADVANCE, getHTMLOfAdvanceDiv() );
+    
+    showMessage( S_EDIT_DONE[giLanguageIndex] );
+    
+    giDrawingResetBeginIndex = giBeginCutIndex;
+    
+    giBeginCutIndex = giEndCutIndex = 0;
+    updateDiv( ID_HEADER, getHTMLOfHeaderDiv() );
 }
 
 function unmarkCutIndexs()
@@ -2134,12 +2200,13 @@ function touchEndEvent( iTouchX, iTouchY )
     }
     else
     {
-        if ( inCanvas( iTouchX, iTouchY ) )
+        if ( !inCanvas( iTouchX, iTouchY ) )
         {
-            draw( iTouchX, iTouchY ); // only touch, not swipe
-            log( "[3]" + gDrawingIndex );
-            storeNowDrawing();
+            return;  // not the draw area
         }
+        
+        draw( iTouchX, iTouchY ); // only touch, not swipe
+        storeNowDrawing();
         
         if ( gPenHistory && gPenHistory != "" )
         {
@@ -2326,12 +2393,6 @@ function issueDrawQueue( iMode, iPlayNumber, iPlayStyle, iPenStyle, iBeginTouchO
     
     if ( gbTotalQueueLoaded )
     {
-        log( "[88]" + iTouchOrder );
-        if ( iPlayStyle == PLAY_STYLE_LOADING )
-        {
-            storeNowDrawing(); // rebuild the drawing data for advance edit
-        }
-        
         // only delay for play, not edit
         var iSpeed = iMode == EDIT_MODE ? 0 : getPlaySpeed() * giQueueDelayCoefficient;
     
@@ -2954,6 +3015,8 @@ function buildLanguage( sText, asData )
     var sAns = "";
     var asTemp1 = sText.split( ";" );
     
+    log( asData );
+    
     var iCount = 0;
     for ( var i = 0; i < asTemp1.length; i ++ )
     {
@@ -2973,7 +3036,13 @@ function buildLanguage( sText, asData )
                 if ( j > 0 )
                     sAllLang += ", ";
             
-                sAllLang += "'" + asData[j].split( "," )[i] + "'";
+                try {
+                    sAllLang += "'" + asData[j].split( "," )[i] + "'";
+                } 
+                catch ( e )
+                {
+                    log( "error[" + i + "," + j + "]:" + asData[j] );
+                }
             }
             
             //log( sAllLang );
@@ -3025,9 +3094,9 @@ function hardToClickMenu()
 function supportCanvas2ImagePlugin()
 {
     return ( typeof window.canvas2ImagePlugin != 'undefined' ) &&
-           ( giPlatform == PLATFORM_ANDROID //||
-             // giPlatform == PLATFORM_WP ||
-             //giPlatform != PLATFORM_IOS;
+           ( giPlatform == PLATFORM_ANDROID ||
+             giPlatform == PLATFORM_IOS
+             // giPlatform == PLATFORM_WP
            );
 }
 

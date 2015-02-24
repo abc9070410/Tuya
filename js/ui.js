@@ -651,9 +651,14 @@ function getHTMLOfHeaderDiv()
             
             string += getHTMLOfHeaderIconItem( "button icon paper", "#" + getPaintPageID(), getPaintPageID(), S_GO_BACK_TO[giLanguageIndex] + S_CANVAS[giLanguageIndex] );
             
-            if ( gsNowDivID == ID_ADVANCE )
+            if ( gsNowDivID == ID_ADVANCE && 
+                 ( giBeginCutIndex > 0 && giEndCutIndex > 0 ) )
             {
                 string += getHTMLOfHeaderIconItem( "button icon pencil", "javascript:clickEditConfirm();", ID_CLICK_EDIT_CONFIRM, S_CONFIRM[giLanguageIndex] );
+            }
+            else
+            {
+                log( "not show editConfirm button" );
             }
         }
         else
@@ -840,7 +845,7 @@ function getHTMLOfNavPlayDiv()
     
     sIcon = getProcessBarEnabled() ? "icon check" : "icon target";
     string += getHTMLOfListLinkItem( sIcon, "javascript:clickEnableProcessBar();", ID_CLICK_ENABLE_PROCESS_BAR, S_ENABLE_PROCESS_BAR[giLanguageIndex] );
-    string += getHTMLOfListLinkItem( "icon trash", "javascript:clickCutPenHistory();", ID_CLICK_CUT_PEN_HISTORY, S_REMOVE_DRAWING[giLanguageIndex] );
+    //string += getHTMLOfListLinkItem( "icon trash", "javascript:clickCutPenHistory();", ID_CLICK_CUT_PEN_HISTORY, S_REMOVE_DRAWING[giLanguageIndex] );
     
     return string;
 }
@@ -861,7 +866,7 @@ function getHTMLOfNavPenRecordDiv()
     string += getHTMLOfListText( "", sText );
     string += getHTMLOfListLinkItem( "icon refresh", "javascript:clickUndo();", ID_CLICK_UNDO, S_UNDO[giLanguageIndex] );
     string += getHTMLOfListLinkItem( "icon stack", "javascript:clickRedo();", ID_CLICK_REDO, S_REDO[giLanguageIndex] );
-    string += getHTMLOfListItem( "icon tools", ID_ADVANCE, S_ADVANCE[giLanguageIndex] );
+    string += getHTMLOfListItem( "icon tools", ID_ADVANCE, S_REMOVE_DRAWING[giLanguageIndex] );
 
     return string;
 }
@@ -1076,7 +1081,16 @@ function getHTMLOfNavFileDiv()
     }
     else
     {
-        var sText = S_OPEN[giLanguageIndex] + "<br><br><input id='" + ID_IMG_FILE_SELECTOR + "' type='file' value='IMG' ";
+        var sOpenText = S_OPEN[giLanguageIndex];
+        
+        if ( giPlatform == PLATFORM_IOS )
+        {
+            string += getHTMLOfListLinkItem( "icon folder", "javascript:clickOpenAnimation();", "", S_OPEN_ANIMATION[giLanguageIndex] );
+            
+            sOpenText = S_OPEN_DRAWING[giLanguageIndex];
+        }
+    
+        var sText = sOpenText + "<br><br><input id='" + ID_IMG_FILE_SELECTOR + "' type='file' value='IMG' ";
         sText += notSupportJsLink() ? "/>" : "onchange='file_viewer_load();'/>";
         string += getHTMLOfListText( "icon folder", sText );
     }
@@ -1148,7 +1162,7 @@ function getHTMLOfAdvanceDiv()
             
             var sSymbol = gabNeedCut[iNowDrawIndex] ? SYMBOL_UNCHECKED : SYMBOL_CHECKED;
             
-            asText[j] = sSymbol + " " + iNowDrawIndex;// + ": " + getPenStyle( penMotions[iLastMotionOrder] );
+            asText[j] = sSymbol + " " + iNowDrawIndex + "." + gaiTouchIndexForEdit[iNowDrawIndex];// + ": " + getPenStyle( penMotions[iLastMotionOrder] );
             asImage[j] = gDrawingHistory[iNowDrawIndex];
             asHref[j] = "javascript:clickCutEdit(" + ( i + j ) + ")";
             asID[j] = ID_CLICK_CUT_EDIT + ( i + j );
@@ -1177,6 +1191,8 @@ function getHTMLOfAdvanceDiv()
     
     string += "<br>";
     string += "<br>";
+    
+    log( "---->" + gaiTouchIndexForEdit );
 
     return string;
 }
@@ -1561,6 +1577,35 @@ function getHTMLOfFontSizeDiv()
     }
     
     return string;
+}
+
+function getHTMLOfFileListDiv()
+{
+    var string = "";
+    
+    string += getHTMLOfNewLine( 1 );
+    
+    //string += getHTMLOfListText( "icon tag", " 1 ~ " + entries.length );
+    
+    var iCount = gFileEntries.length;
+    var iBegin = iCount < 20 ? 0 : iCount - 20;
+    
+    for ( var i = iCount - 1; i > iBegin; i -- )
+    {
+        if ( gFileEntries[i].name.indexOf( ".png" ) > 0 )
+        {
+            continue;
+        }
+        
+        var sName = gFileEntries[i].name.substring( 0, gFileEntries[i].name.length - 4 );
+        string += getHTMLOfListLinkItem( "icon", "javascript:clickOpenFileByPlugin(" + i + ");", "", sName );
+        
+    }
+    
+    string += getHTMLOfNewLine( 1 );
+    
+    return string;
+    
 }
 
 
