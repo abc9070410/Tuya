@@ -3088,7 +3088,8 @@ function notSupportExternalIcon()
 
 function hardToClickMenu()
 {
-    return giPlatform == PLATFORM_FIREFOXOS;
+    return giPlatform == PLATFORM_FIREFOXOS ||
+           giPlatform == PLATFORM_TIZEN;
 }
 
 function supportCanvas2ImagePlugin()

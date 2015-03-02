@@ -173,7 +173,11 @@ function playPenHistory( iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder 
             //alert( giPenTouchCount ); 
             playStopped( false );
             
-            replaceNowDrawing(); //storeNowDrawing(); // store the drawing in the end of play
+            if ( iPlayStyle != PLAY_STYLE_DEMO && iPlayStyle != PLAY_STYLE_LOADING )
+            {
+                log( "[2]: replace " );
+                replaceNowDrawing(); //storeNowDrawing(); // store the drawing in the end of play
+            }
         }
     }
     else if ( needWaitingPlay( iCurrentPenStyle ) )
