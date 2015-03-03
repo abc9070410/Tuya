@@ -236,6 +236,7 @@ function initUI()
         string += getEmptyDiv( ID_MAIN, S_APP_NAME[giLanguageIndex] );
         string += getPrefixDiv( ID_LANGUAGE, "" );
         string += getHTMLOfLanguageDiv();
+        string += getHTMLOfCanvas(); 
     }
     string += "</div>";
     string += "</div>";
@@ -306,7 +307,7 @@ function getHTMLOfHeaderIconItem( sClass, sHref, sID, sText )
         {
             if ( notSupportExternalIcon() )
             {
-                return "<div class='button icon' style='" + sStyle + "' id='" + sID + "' >" + getIcon( sID ) + "</div>";
+                return "<div class='button icon' style='" + sStyle + "' id='" + sID + "' >" + getIcon( sID ) + sText + "</div>";
             }
             else
             {
@@ -452,8 +453,6 @@ function getHTMLOfGridLinkItemWithImage( sClass, asHref, asID, asText, asImage )
                     sGridHTML += "<a href='#" + getPaintPageID() + "'><img class='" + sClass + "' id='" + asID[i] + "' data-transition='" + gsTransition + "' style='max-width:" + iWidth + "px;max-height:" + iHeight + "px;' src='" + asImage[i] + "' >" + asText[i] + "</img></a>";
                 }
                 sGridHTML += "</div>";
-            
-                log("-------1");
                 return "<ul class='list' style='font-size:" + iFontRatio + "%' ><li>" + sGridHTML + "</li></ul>";
             }
             else
@@ -463,8 +462,7 @@ function getHTMLOfGridLinkItemWithImage( sClass, asHref, asID, asText, asImage )
                     sGridHTML += "<img class='" + sClass + "' id='" + asID[i] + "' data-transition='" + gsTransition + "' style='max-width:" + iWidth + "px;max-height:" + iHeight + "px;' src='" + asImage[i] + "' >" + asText[i] + "</img>";
                 }
                 sGridHTML += "</div>";
-            
-                log("-------2");
+
                 return "<ul class='list' style='font-size:" + iFontRatio + "%' ><li>" + sGridHTML + "</li></ul>";
             }
         }
@@ -475,8 +473,7 @@ function getHTMLOfGridLinkItemWithImage( sClass, asHref, asID, asText, asImage )
                 sGridHTML += "<img style='max-width:" + iWidth + "px;max-height:" + iHeight + "px;' id='" + asID[i] + "' src='" + asImage[i] + "' ><div class='" + sClass + "' data-transition='" + gsTransition + "'>" + asText[i] + "</div></img>";
             }
             sGridHTML += "</div>";
-        
-            log("-------3");
+
             return "<ul class='list' style='font-size:" + iFontRatio + "%' ><li>" + sGridHTML + "</li></ul>";
         }
     }
@@ -1181,18 +1178,16 @@ function getHTMLOfAdvanceDiv()
 
     if ( giFirstDrawingInNowPage > ITEMS_PER_ADVANCE_PAGE - 1 )
     {
-        string += getHTMLOfPrevButton( "javascript:clickPrevAdvancePage();", ID_CLICK_NEW_FILE );
+        string += getHTMLOfPrevButton( "javascript:clickPrevAdvancePage();", ID_CLICK_PREV_ADVANCE_PAGE );
     }
     
     if ( getNextDrawIndex() > giFirstDrawingInNowPage + ITEMS_PER_ADVANCE_PAGE - 1 )
     {
-        string += getHTMLOfNextButton( "javascript:clickNextAdvancePage();", ID_CLICK_NEW_FILE );
+        string += getHTMLOfNextButton( "javascript:clickNextAdvancePage();", ID_CLICK_NEXT_ADVANCE_PAGE );
     }
     
     string += "<br>";
     string += "<br>";
-    
-    log( "---->" + gaiTouchIndexForEdit );
 
     return string;
 }
@@ -1201,14 +1196,14 @@ function getHTMLOfAdvanceEditDiv( iTouchIndex )
 {
     var string = "";
     
-    var iDrawIndex = giFirstDrawingInNowPage - iTouchIndex;
-    var sText = "No." + iDrawIndex;
-    var sImage = gDrawingHistory[iDrawIndex];
+    giTargetEditIndex = giFirstDrawingInNowPage - iTouchIndex;
+    var sText = "No." + giTargetEditIndex;
+    var sImage = gDrawingHistory[giTargetEditIndex];
     
     string += getHTMLOfListLinkItemWithImage( "icon", "", "", sText, sImage );
     
-    string += getHTMLOfListLinkItem( "icon setting", "javascript:clickBeginCut(" + iDrawIndex + ");", ID_CLICK_CHANGE_FILE_NAME, S_BEGIN_OF_CUT[giLanguageIndex] );
-    string += getHTMLOfListLinkItem( "icon setting", "javascript:clickEndCut(" + iDrawIndex + ");", ID_CLICK_CHANGE_FILE_NAME, S_END_OF_CUT[giLanguageIndex] );
+    string += getHTMLOfListLinkItem( "icon setting", "javascript:clickBeginCut();", ID_CLICK_BEGIN_CUT, S_BEGIN_OF_CUT[giLanguageIndex] );
+    string += getHTMLOfListLinkItem( "icon setting", "javascript:clickEndCut();", ID_CLICK_END_CUT, S_END_OF_CUT[giLanguageIndex] );
     
     return string;
 }

@@ -1759,7 +1759,7 @@ function clickOpenFileByPlugin( iEntryIndex )
 {
     gFileEntries[iEntryIndex].file( 
         function( file ) {
-            showMessage( "file:" + file.size + ":"+ file.type );
+            //showMessage( "file:" + file.size + ":"+ file.type );
             gOpenImageFile = file;
             file_viewer_load();
         }, fail );
@@ -1969,8 +1969,10 @@ function clickCutEdit( iTouchIndex )
     enableSideMenu();
 }
 
-function clickBeginCut( iDrawingIndex )
+function clickBeginCut()
 {    
+    var iDrawingIndex = giTargetEditIndex;
+    
     giBeginCutIndex = iDrawingIndex;
     
     unmarkCutIndexs();
@@ -1981,8 +1983,10 @@ function clickBeginCut( iDrawingIndex )
     disableSideMenu();
 }
 
-function clickEndCut( iDrawingIndex )
+function clickEndCut()
 {
+    var iDrawingIndex = giTargetEditIndex;
+    
     giEndCutIndex = iDrawingIndex;
     
     unmarkCutIndexs();

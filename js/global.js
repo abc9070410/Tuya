@@ -34,7 +34,7 @@ var PLATFORM_WINDOWS_8 = 7;
 var PLATFORM_TIZEN = 8;
 var PLATFORM_UBUNTU_TOUCH = 9;
 var PLATFORM_BROWSER = 10;
-var giPlatform = PLATFORM_BROWSER; // default platform
+var giPlatform = PLATFORM_CHROMEOS; // default platform
 
 var B_ON_DEVICE = true;
 
@@ -142,12 +142,16 @@ var ID_DOWNLOAD_ANIMATION_LINK = "ID_DOWNLOAD_ANIMATION_LINK";
 var ID_DOWNLOAD_DRAWING_LINK = "ID_DOWNLOAD_DRAWING_LINK";
 
 var ID_CLICK_EDIT_CONFIRM = "ID_CLICK_EDIT_CONFIRM";
+var ID_CLICK_PREV_ADVANCE_PAGE = "ID_CLICK_PREV_ADVANCE_PAGE";
+var ID_CLICK_NEXT_ADVANCE_PAGE = "ID_CLICK_NEXT_ADVANCE_PAGE";
+var ID_CLICK_BEGIN_CUT = "ID_CLICK_BEGIN_CUT";
+var ID_CLICK_END_CUT = "ID_CLICK_END_CUT";
 
 var ID_CLICK_ALL_ARRAY = new Array( ID_CLICK_UNDO, "appbar.layout.collapse.left.variant", "↻", ID_CLICK_MENU, "appbar.lines.horizontal.4", "▤", ID_CLICK_PLAY, "appbar.tv", "►", ID_CLICK_PAUSE, "appbar.control.pause", "■", ID_CLICK_CONTINUE, "appbar.control.play", "►", ID_CLICK_CLEAN, "appbar.clipboard.variant", "❒", ID_CLICK_PEN_RECORD_SIDE_MENU, "appbar.film", "₪", ID_CLICK_PEN_STYLE_SIDE_MENU, "appbar.edit.box", "✎", ID_CLICK_COLOR_SIDE_MENU, "appbar.crop", "▩", ID_CLICK_PLAY_SIDE_MENU, "appbar.camera", "►", ID_CLICK_FILE_SIDE_MENU, "appbar.cabinet.variant", "✇", ID_CLICK_GO_BACK_TO_PAINT, "appbar.arrow.left", "⇦", ID_CLICK_GO_BACK_TO_PEN_STYLE, "appbar.arrow.left", "⇦", 
 ID_CLICK_FORE_COLOR_SIDE_MENU, "appbar.layer.arrange.solid.sendbackward", "❏", ID_CLICK_BACK_COLOR_SIDE_MENU, "appbar.layer.arrange.solid.bringforward", "❐", ID_CLICK_PLAY_STYLE_OBVERSE, "appbar.timer.forward", "►", ID_CLICK_PLAY_STYLE_REVERSE, "appbar.timer.rewind", "◄", ID_CLICK_PLAY_SPEED_UP, "appbar.add", "+", ID_CLICK_PLAY_SPEED_DOWN, "appbar.minus", "-", ID_CLICK_CUT_PEN_HISTORY, "appbar.scissor", "✁", ID_CLICK_REDO, "appbar.layout.collapse.right", "↺", 
 ID_CLICK_PEN_STYLE_LINE, "appbar.draw.marker", "✐", ID_CLICK_PEN_STYLE_CIRCLE, "appbar.cd", "●", ID_CLICK_PEN_STYLE_RECTANGLE, "appbar.fullscreen.box", "■", ID_CLICK_PEN_STYLE_DOT, "appbar.draw.paintbrush", "❄", ID_CLICK_PEN_STYLE_ERASER, "appbar.clean", "◕", ID_CLICK_PEN_STYLE_TEXT, "appbar.message.smiley", "✑", ID_CLICK_PEN_STYLE_OTHER, "appbar.code.xml", "ஐ", ID_CLICK_PEN_STYLE_IMAGE, "appbar.image", "❖", 
 ID_CLICK_CHANGE_TEXT, "appbar.edit.box", "✎", ID_CLICK_PEN_STYLE_DEMO_INCREASE, "appbar.edit.add", "+", ID_CLICK_PEN_STYLE_DEMO_DECREASE, "appbar.edit.minus", "-", ID_CLICK_DELAY, "appbar.crop", "▣", ID_CLICK_DELAY_SECOND_INCREASE, "appbar.add", "+", ID_CLICK_DELAY_SECOND_DECREASE, "appbar.minus", "-", ID_CLICK_NEW_FILE, "appbar.page.bold", "☁", 
-ID_CLICK_CHANGE_FILE_NAME, "appbar.clipboard.variant.edit", "✎", ID_CLICK_GO_EMAIL_OF_AUTHOR, "appbar.email", "✉", ID_CLICK_GO_BACK_TO_DEFAULT, "appbar.repeat", "⇄", ID_IMG_FILE_SELECTOR, "appbar.folder.open", "", ID_IMG_STUFF_FILE_SELECTOR, "appbar.folder.open", "", ID_DOWNLOAD_ANIMATION_LINK, "appbar.cabinet.in", "✿", ID_DOWNLOAD_DRAWING_LINK, "appbar.image.snow", "✿", ID_PAINT, "appbar.cabinet.out", "✐", ID_ADVANCE, "appbar.edit.box", "＊", ID_CLICK_EDIT_CONFIRM, "appbar.edit.box", "✐" );
+ID_CLICK_CHANGE_FILE_NAME, "appbar.clipboard.variant.edit", "✎", ID_CLICK_GO_EMAIL_OF_AUTHOR, "appbar.email", "✉", ID_CLICK_GO_BACK_TO_DEFAULT, "appbar.repeat", "⇄", ID_IMG_FILE_SELECTOR, "appbar.folder.open", "", ID_IMG_STUFF_FILE_SELECTOR, "appbar.folder.open", "", ID_DOWNLOAD_ANIMATION_LINK, "appbar.cabinet.in", "✿", ID_DOWNLOAD_DRAWING_LINK, "appbar.image.snow", "✿", ID_PAINT, "appbar.cabinet.out", "✐", ID_ADVANCE, "appbar.edit.box", "＊", ID_CLICK_EDIT_CONFIRM, "appbar.edit.box", "✐", ID_CLICK_BEGIN_CUT, "appbar.edit.box", "✐", ID_CLICK_END_CUT, "appbar.edit.box", "✐" );
 
 // "☑""☒"
 
@@ -644,6 +648,7 @@ var giTouchDelayCoefficient = 7;
 
 // for advance edit page
 var giFirstDrawingInNowPage = -1;
+var giTargetEditIndex = 0;
 var giBeginCutIndex = 0;
 var giEndCutIndex = 0;
 var giDrawingResetBeginIndex = 0;
