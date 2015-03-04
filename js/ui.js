@@ -188,6 +188,7 @@ function blockUI()
 
 function initUI()
 {
+    var bNeedPlayMainLogo = false;
     var string = "";
 
     gsNowDivID = isLanguageSet() ? ID_MAIN : ID_LANGUAGE;
@@ -228,7 +229,7 @@ function initUI()
         string += getEmptyDiv( ID_LANGUAGE, S_LANGUAGE[giLanguageIndex] );
         string += getPrefixDiv( ID_MAIN, "" );
         string += getHTMLOfMainDiv();
-        
+        bNeedPlayMainLogo = true;
     }
     else
     {
@@ -236,7 +237,7 @@ function initUI()
         string += getEmptyDiv( ID_MAIN, S_APP_NAME[giLanguageIndex] );
         string += getPrefixDiv( ID_LANGUAGE, "" );
         string += getHTMLOfLanguageDiv();
-        string += getHTMLOfCanvas(); 
+        //string += getHTMLOfCanvas(); 
     }
     string += "</div>";
     string += "</div>";
@@ -257,7 +258,7 @@ function initUI()
 
     updateDiv( "afui", getStaticHTML( string ) );
     
-    if ( !getNowHash() || getNowHash().length < 3 ) // show main logo at beginning
+    if ( bNeedPlayMainLogo ) // show main logo at beginning
     {
         log( "play main logo" );
         playLogo( MAIN_LOGO );
@@ -1159,7 +1160,7 @@ function getHTMLOfAdvanceDiv()
             
             var sSymbol = gabNeedCut[iNowDrawIndex] ? SYMBOL_UNCHECKED : SYMBOL_CHECKED;
             
-            asText[j] = sSymbol + " " + iNowDrawIndex + "." + gaiTouchIndexForEdit[iNowDrawIndex];// + ": " + getPenStyle( penMotions[iLastMotionOrder] );
+            asText[j] = iNowDrawIndex + " " + sSymbol;// + "." + gaiTouchIndexForEdit[iNowDrawIndex];// + ": " + getPenStyle( penMotions[iLastMotionOrder] );
             asImage[j] = gDrawingHistory[iNowDrawIndex];
             asHref[j] = "javascript:clickCutEdit(" + ( i + j ) + ")";
             asID[j] = ID_CLICK_CUT_EDIT + ( i + j );
