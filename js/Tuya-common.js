@@ -175,7 +175,6 @@ function playPenHistory( iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder 
             
             if ( iPlayStyle != PLAY_STYLE_DEMO && iPlayStyle != PLAY_STYLE_LOADING )
             {
-                log( "[2]: replace " );
                 replaceNowDrawing(); //storeNowDrawing(); // store the drawing in the end of play
             }
         }
@@ -183,11 +182,9 @@ function playPenHistory( iPlayNumber, iPlayStyle, iBeginTouchOrder, iTouchOrder 
     else if ( needWaitingPlay( iCurrentPenStyle ) )
     {
         log( "not PPHA" );
-        log( "[33]" + iTouchOrder );
     }
     else
-    {    
-        log( "[44]" + iTouchOrder + "_" + iCurrentPenStyle  );
+    {
         if ( iPlayStyle == PLAY_STYLE_LOADING && giTempPrevPenStyle != TYPE_PEN_INVALID )
         {
             storeNowDrawing(); // rebuild the drawing data for advance edit
@@ -876,7 +873,7 @@ function storeNowDrawing()
 {
     if ( gCanvas )
     {
-        log( "STORE " + gDrawingIndex );
+        //log( "STORE now drawing:" + gDrawingIndex );
         gDrawingIndex = getNextDrawIndex();
         gDrawingHistory[gDrawingIndex] = gCanvas.toDataURL();
         gaiTouchIndexForEdit[gDrawingIndex] = getTouchCount();

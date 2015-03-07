@@ -1447,39 +1447,10 @@ function writeHTMLOfSaveCanvas( sDataURL )
 
 function clickSaveDrawingFile()
 {
-    var sFileName = getImageFileName( IMAGE_TYPE_PNG );
-    var bMessageShowed = true;
+    giImageType = IMAGE_TYPE_PNG;
 
-    if ( typeof Windows != 'undefined' ) // for Win 8 APP only
-    {
-        if ( giPlatform == PLATFORM_WP )
-        {
-            saveImageInWindowsPhone81( IMAGE_TYPE_PNG );
-        }
-        else
-        {
-            saveImageInWindows8( IMAGE_TYPE_PNG );
-        }
-    }
-    else if ( window.navigator.msSaveBlob ) // for IE only
-    {
-        var blobObject = getImageBlob( IMAGE_TYPE_PNG );
-        window.navigator.msSaveBlob(blobObject, sFileName );
-        //showMessage( S_SUCCESS[giLanguageIndex] + " : " + sFileName );
-    }
-    else if ( navigator.getDeviceStorage ) // for FirefoxOS only
-    {
-        saveImageOnFirefoxOS( IMAGE_TYPE_PNG );
-    }
-    else if ( supportCanvas2ImagePlugin() )
-    {
-        saveImageFileByPlugin( IMAGE_TYPE_PNG );
-    }
-    else 
-    {
-        this.href = gsPngDataURL;
-        bMessageShowed = false;
-    }
+    var sFileName = getImageFileName( IMAGE_TYPE_PNG );
+    var bMessageShowed = saveImageFile( IMAGE_TYPE_PNG, this );
     
     disableSideMenu();
     
@@ -1489,66 +1460,17 @@ function clickSaveDrawingFile()
     }
 }
 
+
 function clickSaveAnimationFile()
 {
+    giImageType = IMAGE_TYPE_BMP;
+
     var sFileName = getImageFileName( IMAGE_TYPE_BMP );
     var bMessageShowed = true;
 
     if ( filePrepared() )
     {
-        if ( typeof Windows != 'undefined' ) // for Win 8 APP only
-        {
-            if ( giPlatform == PLATFORM_WP )
-            {
-                saveImageInWindowsPhone81( IMAGE_TYPE_BMP );
-            }
-            else
-            {
-                saveImageInWindows8( IMAGE_TYPE_BMP );
-            }
-        }
-        /*
-        else if ( typeof chrome !== 'undefined' )
-        {
-            showMessage( "chrome: " + chrome.fileSystem.chooseEntry );
-            chrome.fileSystem.chooseEntry({type: 'saveFile'}, function(writableFileEntry) {
-                writableFileEntry.createWriter(function(writer) {
-                  writer.onerror = errorHandler;
-                  writer.onwriteend = function(e) {
-                    console.log('write complete');
-                  };
-                  writer.write(new Blob(['1234567890'], {type: 'text/plain'}));
-                }, errorHandler);
-            });
-        }
-        */
-        else if ( window.navigator.msSaveBlob )  // for IE only
-        {
-            var blobObject = getImageBlob( IMAGE_TYPE_BMP );
-            window.navigator.msSaveBlob(blobObject, sFileName );
-            //showMessage( S_SUCCESS[giLanguageIndex] + " : " + sFileName );
-        }
-        else if ( navigator.getDeviceStorage ) // for FirefoxOS only
-        {
-            saveImageOnFirefoxOS( IMAGE_TYPE_BMP );
-        }
-        else if ( supportCanvas2ImagePlugin() )
-        {
-            saveImageFileByPlugin( IMAGE_TYPE_BMP ); // Android OK
-            
-            //saveImageFileByPlugin2( IMAGE_TYPE_BMP );
-            //goURL( gsBmpDataURL ); // -> not work in Android
-            
-            // http://blogs.telerik.com/appbuilder/posts/13-12-23/cross-window-communication-with-cordova%27s-inappbrowser
-            // http://plugins.cordova.io/#/package/org.apache.cordova.inappbrowser
-            // https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage
-            //writeHTMLOfSaveCanvas( gsBmpDataURL );
-        }
-        else
-        {
-            this.href = gsBmpDataURL;
-            bMessageShowed = false;
-        }
+        bMessageShowed = saveImageFile( IMAGE_TYPE_BMP, this );
     }
     else
     {
@@ -1561,6 +1483,50 @@ function clickSaveAnimationFile()
     {
         showMessage( S_SUCCESS[giLanguageIndex] + " : " + sFileName );
     }
+}
+
+function saveImageFile( iImageType, eThis )
+{
+    var bMessageShowed = true;
+
+    if ( typeof Windows != 'undefined' ) // for Win 8 APP only
+    {
+        if ( giPlatform == PLATFORM_WP )
+        {
+            saveImageInWindowsPhone81( iImageType );
+        }
+        else
+        {
+            saveImageInWindows8( iImageType );
+        }
+    }
+    else if ( window.navigator.msSaveBlob )  // for IE only
+    {
+        var blobObject = getImageBlob( iImageType );
+        window.navigator.msSaveBlob( blobObject, sFileName );
+    }
+    else if ( navigator.getDeviceStorage ) // for FirefoxOS only
+    {
+        saveImageOnFirefoxOS( iImageType );
+    }
+    else if ( supportCanvas2ImagePlugin() ) // for Android, IOS
+    {
+        saveImageFileByPlugin( iImageType );
+
+        //goURL( gsBmpDataURL ); // -> not work in Android        
+        //writeHTMLOfSaveCanvas( gsBmpDataURL );
+    }
+    else if ( supportTizenDownloadAPI() ) // for Tizen only
+    {
+        saveImageInTizen( iImageType );
+    }
+    else // for Chrome OS and the other common browsers
+    {
+        eThis.href = getImageDataURL( iImageType );
+        bMessageShowed = false;
+    }
+    
+    return bMessageShowed;
 }
 
 function filePrepared()
@@ -2085,7 +2051,7 @@ function clickCancelEdit()
 
 function inCanvas( iTouchX, iTouchY )
 {
-    return getHeaderHeight() < iTouchY;
+    return 0 < iTouchY;// getHeaderHeight() < iTouchY;
 }
 
 function touchStartEvent( iTouchX, iTouchY )
@@ -2186,13 +2152,11 @@ function touchEndEvent( iTouchX, iTouchY )
         {       
             draw( iTouchX, iTouchY );       
         }
-        log( "[2]" + gDrawingIndex );
         
         // some style store drawing before touch end, 
         // like circle, rectangle, text and image 
         if ( !needWaitingPlay( gPenStyle ) )
         {
-            log( "[2.1]" + gDrawingIndex );
             storeNowDrawing();
         }
         
@@ -3103,6 +3067,12 @@ function supportCanvas2ImagePlugin()
              giPlatform == PLATFORM_IOS
              // giPlatform == PLATFORM_WP
            );
+}
+
+function supportTizenDownloadAPI()
+{
+    return ( typeof tizen != 'undefined' ) && 
+           ( giPlatform == PLATFORM_TIZEN );
 }
 
 function getOrientation()

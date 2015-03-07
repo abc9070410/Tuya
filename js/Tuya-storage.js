@@ -73,8 +73,7 @@ function showStoredImage( iImageType )
         //saveFile(dataURL);
         //document.getElementById( "canvasImg" ).src = dataURL;
     };
-    
-    log( "[4]" + gDrawingIndex );
+
     replaceNowDrawing(); //storeNowDrawing();
     imageObj.src = getNowDrawing();
 }
@@ -525,10 +524,23 @@ function b64toBlob( b64Data, contentType )
     return new Blob( byteArrays, { type: contentType } );
 }
 
+
+function getImageDataURL( iImageType )
+{
+    return iImageType == IMAGE_TYPE_BMP ? gsBmpDataURL : gsPngDataURL;
+}
+
+function getImageBase64( iImageType )
+{
+    return iImageType == IMAGE_TYPE_BMP ? gsBmpData : gsPngData;
+}
+
 function getImageBlob( iImageType )
 {
     return iImageType == IMAGE_TYPE_BMP ? b64toBlob( gsBmpData, "image/bmp" ) : b64toBlob( gsPngData, "image/png" );
 }
+
+
 
 function saveImageInWindows8( iImageType )
 {
@@ -543,7 +555,7 @@ function saveImageInWindows8( iImageType )
     // Default file name if the user does not type one in or select a file to replace
     savePicker.suggestedFileName = getImageFileName( iImageType );
     
-    var sImageString = iImageType == IMAGE_TYPE_BMP ? gsBmpData : gsPngData;
+    var sImageString = getImageBase64( iImageType );
     var blob = getImageBlob( iImageType );
 
     savePicker.pickSaveFileAsync().then(function (file) {
@@ -586,7 +598,7 @@ function saveImageFileByPlugin( iImageType )
                 console.log( err );
                 showMessage( "FAIL: " + err.stack );
             },
-            ( iImageType == IMAGE_TYPE_BMP ? gsBmpData : gsPngData ),
+            getImageBase64( iImageType ),
             getImageFileName( iImageType )
         );
     }
@@ -753,3 +765,96 @@ function continueFileSavePicker(file) {
         WinJS.log && WinJS.log("Operation cancelled.", "sample", "status");
     }
 }
+
+
+var downloadListener = {
+    onprogress: function(id, receivedSize, totalSize) {
+        console.log('Received with id: ' + id + ', ' + receivedSize + '/' + totalSize);
+    },
+    onpaused: function(id) {
+        console.log('Paused with id: ' + id);
+    },
+    oncanceled: function(id) {
+        console.log('Canceled with id: ' + id);
+    },
+    oncompleted: function(id, fullPath) {
+        console.log('Completed with id: ' + id + ', full path: ' + fullPath);
+        
+        showMessage( S_SUCCESS[giLanguageIndex] + " : " + getImageFileName( giImageType ) + " [" + fullPath + "]" );
+    },
+    onfailed: function(id, error) {
+        console.log('Failed with id: ' + id + ', error name: ' + error.name);
+    }
+};
+
+function saveImageInTizen_maybeNotUseful( iImageType )
+{
+    var sFileName = getImageFileName( iImageType );
+    var sURL = getImageDataURL( iImageType );
+    var sPath = "documents";
+
+    // Starts downloading of the file from the Web with the corresponding callbacks.
+    var downloadRequest = new tizen.DownloadRequest( sURL, sPath, sFileName );
+    downloadId = tizen.download.start( downloadRequest, downloadListener );
+}
+ 
+function saveImageInTizen()
+{
+    tizen.filesystem.resolve('documents', onResolveSuccess, onResolveError, 'rw');
+}
+
+function onResolveError( e ) 
+{
+    showMessage('message: ' + e.message);
+}
+
+function onResolveSuccess( dir ) 
+{
+    var documentsDir;
+    var file;
+    var sFileName = getImageFileName( giImageType );
+
+    documentsDir = dir;
+    documentsDir.createFile( sFileName );
+    
+    try {
+        file = documentsDir.resolve( sFileName );
+
+    } catch (exc) {
+        showMessage('Could not resolve file: ' + exc.message);
+        // Stop in case of any errors
+        return;
+    }
+
+    
+    try {
+        file.openStream(
+        // open for appending
+        'a',
+         
+        // success callback
+        writeToStream,
+         
+        // error callback
+        onResolveError
+        );
+    } catch (exc) {
+        showMessage('Could not write to file: ' + exc.message);
+    }
+}
+
+function writeToStream( fileStream ) 
+{
+    try 
+    {
+        fileStream.writeBase64( getImageBase64( giImageType ) );
+        fileStream.close();
+        
+        showMessage( S_SUCCESS[giLanguageIndex] + " > " + getImageFileName( giImageType ) );
+    } catch (exc) {
+        showMessage('Could not write to file: ' + exc.message);
+    }
+}
+
+
+

@@ -763,7 +763,6 @@ function issueNextQueue( iMode, iPlayNumber, iPlayStyle, iPenStyle, iBeginTouchO
 
         if ( iMode == PLAY_MODE )
         {
-            log( "[55]" + iTouchOrder );
             if ( iPlayStyle == PLAY_STYLE_LOADING )
             {
                 //storeNowDrawing(); // rebuild the drawing data for advance edit
@@ -773,12 +772,9 @@ function issueNextQueue( iMode, iPlayNumber, iPlayStyle, iPenStyle, iBeginTouchO
             setTimeout( playPenHistoryAnimation( iPlayNumber, iPlayStyle, iBeginTouchOrder, iNextOrder ), getPlaySpeed() );
         }
         else
-        {
-            log( "[5]" + giTouchNum );
-        
+        {        
             if ( giTouchNum != giTempTouchNum )
             {
-                log( "[5.1]" + gDrawingIndex );
                 storeNowDrawing(); 
                 giTempTouchNum = giTouchNum;
             }
