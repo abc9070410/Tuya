@@ -189,7 +189,11 @@ function getRelatedUrlByIndex( index )
     }
     else if ( S_RELATED_LINKS_ARRAY[index].toString() === S_UBUNTU_APP_DIRECTORY.toString() )
     {
-        return "https://myapps.developer.ubuntu.com/dev/click-apps/";
+        return "https://appstore.bhdouglass.com/app/tuya.abc9070410gmailcom";
+    }
+    else if ( S_RELATED_LINKS_ARRAY[index].toString() === S_TIZEN_STORE.toString() )
+    {
+        return "http://www.amazon.com/surveyorK-Tuya/dp/B00U90FF7E";
     }
     else if ( S_RELATED_LINKS_ARRAY[index].toString() === S_TIZEN_STORE.toString() )
     {
