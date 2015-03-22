@@ -1,5 +1,7 @@
 # Tuya
+
 * A simple drawing pad using HTML5
+![res](res/screenshot1.png)
 
 ## Features
 
