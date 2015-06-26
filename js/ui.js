@@ -981,6 +981,8 @@ function getHTMLOfNavPenStyleImageDiv()
         string += getHTMLOfListLinkItemWithImage( "icon paper", "javascript:clickPenStylePicture(" + i + ");", ID_CLICK_PEN_STYLE_PICTURE + i, gImageName[i], getImageData( i ) );
     }
     
+    giPlayStyle = PLAY_STYLE_OBVERSE; // let the image resize correctly
+    
     return string;
 }
 

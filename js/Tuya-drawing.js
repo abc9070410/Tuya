@@ -47,6 +47,12 @@ function draw( phyX, phyY )
                 {
                     iWidthRatio *= getSpecificWidth( TYPE_IMAGE ) / 100;
                     iHeightRatio *= getSpecificWidth( TYPE_IMAGE ) / 100;
+                    
+                    console.log("Image resize ratio: " + iWidthRatio + "," + iHeightRatio);
+                }
+                else
+                {
+                    console.log("not resize image, cause giPlayStyle = " + giPlayStyle);
                 }
                 
                 sSinglePenHistory = addQueueImage( iImageIndex, phyX, phyY, iWidthRatio, iHeightRatio );
